@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>W&aringnderer Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="google-site-verification" content="0Xgb4LTgdzhgCZEEVNIFNWW_QQUAWfXceyBLRiX6VlY" />
+    <style>body { margin: 0; }</style>
+  </head>
+  <body>
+    <!-- Attachment point for your app -->
+    <div id="container"></div>
+    <script src="./client.bundle?platform=vr"></script>
+    <script>
+      // Initialize the React 360 application
+      React360.init(
+        'index.bundle?platform=vr&dev=true',
+        document.getElementById('container'),
+        {
+          assetRoot: 'static_assets/',
+        }
+      );
+    </script>
+  </body>
+</html>
+
