@@ -14,14 +14,15 @@ export default class wanderer_site extends React.Component {
   render() {
     return (
       <View>
-        <AmbientLight intensity={2} />
+        {/* <AmbientLight intensity={5} /> */}
+        {/* <PointLight style={{color:'white', transform:[{translate:[0,0,0]}]}}/> */}
           <Entity
-          source={{ obj: asset('room.obj'),
+            source={{ obj: asset('temp.obj'), mtl: asset('temp.mtl')
           }}
           style={{
             transform: [
-              {translate: [0, 0, 0]},
-              {scale: 10}
+              {translate: [0, -1.7, 0]},
+              {scale: 1}
             ]
           }}
           />
