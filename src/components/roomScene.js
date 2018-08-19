@@ -6,7 +6,7 @@ OBJLoader(THREE);
 import {loadProgressPage, removeProgressPage, updateProgress} from './loading_screen';
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 2000 );
 var renderer = new THREE.WebGLRenderer();
 
 var manager = new THREE.LoadingManager();
@@ -17,14 +17,14 @@ export const createScene = function() {
     loadProgressPage()
     renderer.setSize( window.innerWidth, window.innerHeight );
 
-    var light1 = new THREE.PointLight( 0xffffff, 1, 200 );
-    light1.intensity = 2.0
+    var light1 = new THREE.PointLight( 0xffffff, 1, 100 );
+    light1.intensity = 0.5
     light1.position.set( 0, 2, -11 );
     scene.add(light1);
 
-    var light2 = new THREE.PointLight( 0xffffff, 1, 200 );
-    light2.intensity = 2.0
-    light2.position.set( 0, 4, -11 );
+    var light2 = new THREE.PointLight( 0xffffff, 1, 100 );
+    light2.intensity = 0.3
+    light2.position.set( 0, 3, -11 );
     scene.add(light2);
 
     return renderer.domElement;
@@ -33,17 +33,21 @@ export const createScene = function() {
 export const renderRoom = function() {
     mtlLoader.setPath('/scenes/room/')
     mtlLoader.setBaseUrl('/scenes/room/')
-    mtlLoader.load('dcf97d92cdf34dbc93f3af219b063713.mtl', function(materials) {
+    mtlLoader.load('CONVICT_TUNNEL.mtl', function(materials) {
         materials.preload()
 
         objectLoader.setPath('/scenes/room/')
         objectLoader.setMaterials(materials);
-        objectLoader.load('dcf97d92cdf34dbc93f3af219b063713.obj', function(object) {
+        objectLoader.load('CONVICT_TUNNEL.obj', function(object) {
+            
             object.position.z = -11;
-            object.position.y = 2;
+            object.position.y = -1.7;
+            object.position.x = -0.4;
+            
             object.rotation.x = Math.PI / 2;
             object.rotation.z = Math.PI / 2;
-    
+            object.rotation.y -= Math.PI / 2;
+
             scene.add(object);
             renderer.render(scene, camera);
             removeProgressPage();
