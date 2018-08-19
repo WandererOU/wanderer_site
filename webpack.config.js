@@ -1,12 +1,16 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.js',
   plugins: [
     new CleanWebpackPlugin(['dist']),
+    new CopyWebpackPlugin([
+        { from: './src/assets' }
+    ]),
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
       template: 'index.html'
@@ -41,6 +45,10 @@ module.exports = {
         use: [
           'file-loader'
         ]
+      },
+      {
+        test: /\.obj$/,
+        loader: 'webpack-obj-loader'
       }
     ]
   }

@@ -1,14 +1,13 @@
-import _ from 'lodash';
-import './style.css';
+import * as roomScene from './components/roomScene';
+import './css/loading_screen.css';
+import './css/style.css';
 
-function component() {
-    let element = document.createElement('div');
-  
-    // Lodash, currently included via a script, is required for this line to work
-    element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-    element.classList.add('hello');
-    
-    return element;
-  }
-  
-  document.body.appendChild(component());
+function mainContainer() {
+    // Adding scene to main-div
+    const scene = roomScene.createScene()
+    document.getElementById('main-div').appendChild(scene)
+    // Render cube inside main div
+    roomScene.renderRoom()
+}
+
+mainContainer()

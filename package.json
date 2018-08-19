@@ -18,15 +18,22 @@
   "homepage": "https://bitbucket.org/wandererstudio/wanderer_site#readme",
   "devDependencies": {
     "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.22.1",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "webpack-dev-server": "^3.1.5",
+    "webpack-obj-loader": "^1.0.4"
   },
   "dependencies": {
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "obj-mtl-loader": "0.0.5",
+    "three": "^0.95.0",
+    "three-full": "^8.0.0",
+    "three-mtl-loader": "^1.0.2",
+    "three-obj-loader": "^1.1.3"
   }
 }
