@@ -33,10 +33,6 @@ export const removeProgressPage = function () {
     mainDiv.removeChild(loadingPage);
 }
 
-// function renderProgress(progress) {
-//     return `<span>${progress}%</span>`
-// }
-
 export const updateProgress = function(newProgress) {
     // Update percentage text
     let percentage = document.getElementById('percentage');

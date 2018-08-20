@@ -5,4 +5,61 @@
     background-color: rgba(18, 24, 26, 0.8);
     z-index: 2;
     top: 0px;
+    display: flex;
+    flex-direction: column;
 }
+
+.topContainer {
+    height: 72px;
+    width: 100%;
+    flex: none;
+    background-color: rgba(18, 24, 26, 0.8);
+}
+
+.topContainer > img {
+    margin: 11px;
+    float: left;
+    height: 50px;
+    width: 50px;
+}
+
+.midContainer {
+    flex: 1 0 auto;
+    flex-direction: row;
+    padding: 60px;
+}
+
+.titleContainer {
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-family: 'Montserrat-Black';
+    font-size: 60pt;
+    color: #604D8D;
+    text-align: center;
+    border-bottom: 2px solid #fff;
+}
+
+.subtitle {
+    font-family: 'Poppins-ExtraLight';
+    font-size: 20pt;
+    color: #fff;
+    text-align: left;
+    padding-left: 60pt;
+    padding-top: 40pt;
+}
+
+.subtitle strong {
+    font-family: 'Poppins-SemiBold';
+    border-bottom: 4pt solid #604D8D;
+}
+
+.botContainer {
+    width: 100%;
+    flex: none;
+    height: 80px;
+}
+
