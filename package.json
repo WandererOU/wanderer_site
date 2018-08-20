@@ -31,9 +31,10 @@
   "dependencies": {
     "lodash": "^4.17.10",
     "obj-mtl-loader": "0.0.5",
+    "orbit-controls-es6": "^1.0.12",
     "three": "^0.95.0",
     "three-full": "^8.0.0",
-    "three-mtl-loader": "^1.0.2",
+    "three-mtl-loader": "avasconcelos114/three-mtl-loader",
     "three-obj-loader": "^1.1.3"
   }
 }
