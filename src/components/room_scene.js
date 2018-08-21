@@ -5,18 +5,20 @@ OBJLoader(THREE);
 
 import {TweenLite} from 'gsap';
 import {loadProgressPage, removeProgressPage, updateProgress} from './loading_screen';
+import {selectActiveMenu} from './landing_screen';
 import * as constants from '../utils/constants';
 
 var scene = new THREE.Scene();
+scene.background = new THREE.Color( 0xffffff )
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 2000 );
+camera.focus = 2;
 var renderer = new THREE.WebGLRenderer();
 
 var manager = new THREE.LoadingManager();
 var objectLoader = new THREE.OBJLoader(manager);
 var mtlLoader = new MTLLoader(manager);
 
-// State used to map cursor events; coordinates are fixed locations to move camera to
-// DO NOT change value of coordinates!
+// dictates what part of scene is visible and what HTML elements to render
 var activeMenu = constants.INITIAL;
 const menuCoordinates = {
     initial: {
@@ -114,6 +116,7 @@ export const renderRoom = function() {
 
             scene.add(object);
             renderer.render(scene, camera);
+            selectActiveMenu(activeMenu);
             removeProgressPage();
         }, 
         function(xhr) {
@@ -135,28 +138,15 @@ window.addEventListener('resize', () => {
     renderer.setSize( window.innerWidth, window.innerHeight );
 });
 
+// Listen to mobile motion events
+if(window.DeviceMotionEvent){
+    window.addEventListener("deviceorientation", mobileMotion, false);
+}
+
 document.addEventListener('mousemove', (event) => {
     var x = event.movementX;
     var y = event.movementY;
-    var sensitivity = 0.00002;
-    
-    if (activeMenu === constants.INITIAL) {
-        camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -y * sensitivity)
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
-        renderer.render(scene, camera)
-    } else if (activeMenu === constants.ABOUT) {
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -y * sensitivity)
-        renderer.render(scene, camera)
-    } else if (activeMenu === constants.APPS || activeMenu === constants.BLOG) {
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), y * sensitivity)
-        renderer.render(scene, camera)
-    } else if (activeMenu === constants.CONTACTS) {
-        camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), y * sensitivity)
-        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
-        renderer.render(scene, camera)
-    }
+    rotateCamera(x, y);
 })
 
 window.addEventListener('wheel', function(event) {
@@ -182,8 +172,14 @@ window.addEventListener('wheel', function(event) {
 
 document.addEventListener('click', (event) => {
     // Clicked menu/button to go to About section
-    if(event.target.id.includes('goToAbout')) {
+    if(event.target.id.includes(constants.ABOUT)) {
         moveCamera(constants.ABOUT);
+    } else if (event.target.id.includes(constants.APPS)) {
+        moveCamera(constants.APPS);
+    } else if (event.target.id.includes(constants.BLOG)) {
+        moveCamera(constants.BLOG);
+    } else if (event.target.id.includes(constants.CONTACTS)) {
+        moveCamera(constants.CONTACTS);
     }
 })
 
@@ -196,9 +192,41 @@ function animate() {
 
 animate()
 
+// Mobile events
+function mobileMotion(event) {
+    // let x = event.accelerationIncludingGravity.x
+    // let y = event.accelerationIncludingGravity.y
+    let x = event.beta;
+    let y = event.gamma;
+
+    rotateCamera(x, y);
+}
+
 // Camera events
+function rotateCamera(x, y) {
+    var sensitivity = 0.00002;
+    
+    if (activeMenu === constants.INITIAL) {
+        camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -y * sensitivity)
+        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+        renderer.render(scene, camera)
+    } else if (activeMenu === constants.ABOUT) {
+        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+        camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -y * sensitivity)
+        renderer.render(scene, camera)
+    } else if (activeMenu === constants.APPS || activeMenu === constants.BLOG) {
+        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+        camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), y * sensitivity)
+        renderer.render(scene, camera)
+    } else if (activeMenu === constants.CONTACTS) {
+        camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), y * sensitivity)
+        camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+        renderer.render(scene, camera)
+    }
+}
+
 function moveCamera(menu) {
-    console.log(menu)
+    selectActiveMenu(menu)
     activeMenu = menu;
     let coordinates = menuCoordinates[menu]
     let position = coordinates.position;
