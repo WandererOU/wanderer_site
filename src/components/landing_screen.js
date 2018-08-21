@@ -10,27 +10,27 @@ export const renderLandingPage = function() {
     document.getElementById('main-div').appendChild(overlay);
 
     const topContainer = document.createElement('div');
-    topContainer.className = 'topContainer';
-    topContainer.id = 'topContainer';
+    topContainer.className = 'top-container';
+    topContainer.id = 'top-container';
     document.getElementById('overlay').appendChild(topContainer);
     
     const midContainer = document.createElement('div');
-    midContainer.className = 'midContainer';
-    midContainer.id = 'midContainer';
+    midContainer.className = 'mid-container';
+    midContainer.id = 'mid-container';
     document.getElementById('overlay').appendChild(midContainer);
 
     const botContainer = document.createElement('div');
-    botContainer.className = 'botContainer';
-    botContainer.id = 'botContainer';
+    botContainer.className = 'bot-container';
+    botContainer.id = 'bot-container';
     document.getElementById('overlay').appendChild(botContainer);
 
     // Populate layout
     const logo = document.createElement('img');
     logo.src = WhiteLogo;
-    document.getElementById('topContainer').appendChild(logo);
+    document.getElementById('top-container').appendChild(logo);
 
     const title = document.createElement('div');
-    title.className = 'titleContainer';
+    title.className = 'title-container';
     title.innerHTML = 
                         '<span class="title">' +
                             'Augmented Reality<br>like never before.' +
@@ -40,5 +40,11 @@ export const renderLandingPage = function() {
                             'possible experiences in Augmented Reality worlds.<br><br>' +
                             'The future is here, <strong>will you be a part of it?</strong>' +
                         '</span>'
-    document.getElementById('midContainer').appendChild(title);
+    document.getElementById('mid-container').appendChild(title);
+
+    const startButton = document.createElement('div');
+    startButton.className = 'start-button';
+    startButton.id = "start-button goToAbout";
+    startButton.innerHTML = '<span id="goToAbout">Click here or scroll down to begin</span>'
+    document.getElementById('bot-container').appendChild(startButton);
 }

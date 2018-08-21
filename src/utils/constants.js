@@ -1,0 +1,5 @@
+export const INITIAL = 'initial'
+export const ABOUT = 'about'
+export const APPS = 'apps'
+export const BLOG = 'blog'
+export const CONTACTS = 'contacts'
