@@ -61,7 +61,7 @@ const menuCoordinates = {
         position :{
             x: -1,
             y: 0,
-            z: -10
+            z: -16.5
         },
         rotation : {
             x: 0,
@@ -95,6 +95,20 @@ export const createScene = function() {
     return renderer.domElement;
 }
 
+function createTextPlanes() {
+    let aboutTextGeometry = new THREE.PlaneGeometry(15, 20);
+    let aboutTextMaterial = new THREE.MeshBasicMaterial({ 
+        map: THREE.ImageUtils.loadTexture('/images/about_text.png')
+    });
+    aboutTextMaterial.map.needsUpdate = true;
+    let aboutTextPlane = new THREE.Mesh(aboutTextGeometry, aboutTextMaterial);
+    aboutTextPlane.position.set(new THREE.Vector3({x: 0, y: 0, z: -3}));
+    aboutTextPlane.rotateOnWorldAxis(new THREE.Vector3({x: 0, y: 1, z: 0}), -Math.PI / 2);
+    aboutTextPlane.overdraw = true;
+    scene.add(aboutTextPlane);
+    renderer.render(scene, camera);
+}
+
 export const renderRoom = function() {
     mtlLoader.setPath('/scenes/room/');
     mtlLoader.setTexturePath('/scenes/room/');
@@ -115,6 +129,7 @@ export const renderRoom = function() {
             object.rotation.y -= Math.PI / 2;
 
             scene.add(object);
+            createTextPlanes();
             renderer.render(scene, camera);
             selectActiveMenu(activeMenu);
             removeProgressPage();
@@ -237,49 +252,3 @@ function moveCamera(menu) {
     let rotAnimation = TweenLite.to(camera.rotation, 2, {x: rotation.x, y: rotation.y, z: rotation.z})
     rotAnimation.play()
 }
-
-// Render particles on screen
-// export const renderParticles = function() {
-//     var particleCount = 80,
-//     texture = new THREE.TextureLoader().load("/images/particle.png"),
-//     particles = new THREE.Geometry(),
-//     pMaterial = new THREE.PointsMaterial({
-//       size: 0.3,
-//       map: texture
-//     });
-//     for (var p = 0; p < particleCount; p++) {
-//         // create a particle with random position
-//         var pX = -Math.random() * 5 + 2.5,
-//             pY = -Math.random() * 5 + 2.5,
-//             pZ = -Math.random() * 35,
-//             particle = new THREE.Vector3(pX, pY, pZ);
-//             // add it to the geometry
-//             particles.vertices.push(particle);
-//         }
-        
-//         particleSystem = new THREE.Points(
-//             particles,
-//             pMaterial
-//         );
-//         console.log(particleSystem.children)
-//         // add it to the scene
-//         scene.add(particleSystem);
-//         animate()
-// }
-
-// // Used to animate particles
-// function animate() {
-//     requestAnimationFrame(animate);
-//     var object = particleSystem.geometry;
-    
-//     for (var i = 0; i < object.vertices.length; i ++ ) { 
-//         //if ( object[i] instanceof THREE.Geometry ) {
-//             object.vertices[i].x += Math.random() * 0.0010 - 0.001
-//             object.vertices[i].y += Math.random() * 0.0010 - 0.001
-//             object.vertices[i].z += Math.random() * 0.0010 - 0.001
-//             object.verticesNeedUpdate = true
-//         // }
-//     }
-
-//     renderer.render(scene, camera);
-// }
