@@ -29,6 +29,7 @@
     "webpack-obj-loader": "^1.0.4"
   },
   "dependencies": {
+    "gsap": "^2.0.1",
     "lodash": "^4.17.10",
     "obj-mtl-loader": "0.0.5",
     "orbit-controls-es6": "^1.0.12",
