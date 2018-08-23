@@ -76,7 +76,7 @@
     width: inherit;
 }
 
-.subtitle > span {
+.subtitle > p {
     font-family: 'Poppins-ExtraLight';
     font-size: 2em;
     color: #fff;

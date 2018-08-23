@@ -1,44 +1,30 @@
 import WhiteLogo from '../assets/images/plain_white.png';
+import {el, setChildren} from 'redom';
 
-var mainDiv = document.getElementById('main-div');
+export default class LoadingScreen {
+    constructor() {
+        this.progress = 0;
+        this.el = el('#loading-page-container');
+        this.percentage = el('span#percentage', `${this.progress}%`);
+        this.loadingComponent = el('.loading-component-container');
+        this.image = el('img', {src: WhiteLogo});
+        this.progressBar = el('#loading-component-progress');
 
-export const loadProgressPage = function() {
-    let pageContainer = document.createElement('div');
-    pageContainer.id = 'loading-page-container';
+        this.updateProgress = this.updateProgress.bind(this);
+    }
 
-    // Inside pageContainer
-    let progressContainer = document.createElement('div');
-    progressContainer.className = 'loading-component-container';
-    pageContainer.appendChild(progressContainer);
+    onmount() {
+        setChildren(this.loadingComponent, [this.image, this.progressBar]);
+        setChildren(this.el, [this.loadingComponent, this.percentage]);
+    }
 
-    let span = document.createElement('span');
-    span.id = 'percentage';
-    span.innerText = '0%';
-    pageContainer.appendChild(span);
+    updateProgress = (newProgress) => {
+        // Update percentage text
+        let percentage = document.getElementById('percentage');
+        percentage.innerHTML = `${newProgress}%`
 
-    // inside progressContainer
-    let image = document.createElement('img');
-    image.src = WhiteLogo;
-    progressContainer.appendChild(image);
-
-    let progressBar = document.createElement('div');
-    progressBar.id = 'loading-component-progress';
-    progressContainer.appendChild(progressBar);
-    
-    mainDiv.appendChild(pageContainer);
-}
-
-export const removeProgressPage = function () {
-    var loadingPage = document.getElementById('loading-page-container');
-    mainDiv.removeChild(loadingPage);
-}
-
-export const updateProgress = function(newProgress) {
-    // Update percentage text
-    let percentage = document.getElementById('percentage');
-    percentage.innerHTML = `${newProgress}%`
-
-    // resize progress height
-    let progress = document.getElementById('loading-component-progress')
-    progress.style.height = `${120 * (newProgress/100)}px`;
+        // resize progress height
+        let progress = document.getElementById('loading-component-progress')
+        progress.style.height = `${120 * (newProgress/100)}px`;
+    }
 }
