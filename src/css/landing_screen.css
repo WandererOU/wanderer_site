@@ -47,7 +47,10 @@
     flex-direction: column;
 }
 
-.title-container > span {
+p {
+    margin: 0px;
+}
+.title-container > p {
     padding-left: 2rem;
 }
 
@@ -56,7 +59,7 @@
     overflow: hidden;
     padding-bottom: 20px;
 }
-.title > span {
+.title > p {
     font-family: 'Montserrat-Black';
     font-size: 5em;
     color: #604D8D;

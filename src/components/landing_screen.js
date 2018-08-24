@@ -22,7 +22,8 @@ export default class LandingPage {
         this.logo = el('img', {src: WhiteLogo});
         this.titleSection = el('.title-container', [
             el('.title', [
-                el('span', 'Augmented Reality\nlike never before.')
+                el('p', 'Augmented Reality'),
+                el('p', 'like never before.'),
             ]),
             el('.line'),
             el('.subtitle', [
@@ -53,8 +54,12 @@ export default class LandingPage {
     }
 
     clearElements = () => {
+        setChildren(this.botContainer, []);
+        setChildren(this.midContainer, []);
+        setChildren(this.topContainer, []);
         setChildren(this.overlay, []);
         setChildren(this.overlayLight, []);
+        setChildren(this.el, []);
     }
 
     renderAlternateElements = () => {
@@ -79,9 +84,9 @@ export default class LandingPage {
         var tl = new TimelineMax()
         tl.delay(0.2)
         tl.from('.line', 0.8, {width: 0, ease: Power3.easeOut})
-        tl.from('.title span', 0.8, {position: 'relative', top: '5em'}, 'reveal')
-            .to('.title span', 0.3, {position: 'relative', top: 0});
-        tl.from('.subtitle span', 0.8, {position: 'relative', top: '-11em'}, 'reveal')
-        .to('.subtitle span', 0.3, {position: 'relative', top: 0})
+        tl.from('.title p', 0.8, {position: 'relative', top: '5em'}, 'reveal')
+            .to('.title p', 0.3, {position: 'relative', top: 0});
+        tl.from('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, 'reveal')
+        .to('.subtitle p', 0.3, {position: 'relative', top: 0})
     }
 }

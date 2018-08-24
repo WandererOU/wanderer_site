@@ -91,8 +91,8 @@ export default class RoomScene {
         var sensitivity = 0.00002;
         
         if (this.activeMenu === constants.INITIAL) {
-            camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -y * sensitivity)
-            camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+            this.camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -y * sensitivity)
+            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
             this.renderer.render(this.scene, this.camera)
         } else if (this.activeMenu === constants.ABOUT) {
             this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
