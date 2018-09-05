@@ -38,6 +38,7 @@
     "lodash": "^4.17.10",
     "redom": "^3.12.7",
     "three": "^0.95.0",
+    "three-effectcomposer-es6": "0.0.4",
     "three-full": "^8.0.0",
     "three-mtl-loader": "avasconcelos114/three-mtl-loader",
     "three-obj-loader": "^1.1.3"

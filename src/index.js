@@ -40,6 +40,8 @@ class Root {
                 this.roomSceneObj.moveCamera(constants.BLOG);
             } else if (event.target.id.includes(constants.CONTACTS)) {
                 this.roomSceneObj.moveCamera(constants.CONTACTS);
+            } else if (event.target.id.includes(constants.INITIAL)) {
+                this.roomSceneObj.moveCamera(constants.INITIAL)
             }
         })
     }

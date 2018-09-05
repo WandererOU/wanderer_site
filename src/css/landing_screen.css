@@ -36,6 +36,7 @@
 
 .mid-container {
     flex: 1 0 auto;
+    display: flex;
     flex-direction: row;
     padding: 60px;
 }
@@ -50,6 +51,7 @@
 p {
     margin: 0px;
 }
+
 .title-container > p {
     padding-left: 2rem;
 }
@@ -89,6 +91,35 @@ p {
 .subtitle strong {
     font-family: 'Poppins-SemiBold';
     border-bottom: 4px solid #604D8D;
+}
+
+.menu-container {
+    width: 25rem;
+    position: fixed;
+    right: 15px;
+    align-self: center;
+}
+
+.menu-container > p {
+    font-size: 2.5rem;
+    line-height: 3.5rem;
+    font-family: 'Poppins-ExtraLight';
+    color: rgba(18, 24, 26, 0.8);
+    padding: 15px;
+    cursor: pointer;
+}
+
+.menu-container > p.initial {
+    color: #fff !important;
+}
+
+.selected {
+    font-family: 'Poppins-SemiBold' !important;
+}
+
+.menu-container > p:hover {
+    font-size: 3rem;
+    font-family: 'Poppins-SemiBold';
 }
 
 .bot-container {
