@@ -21,8 +21,8 @@ class Root {
         })
 
         document.addEventListener('mousemove', (event) => {
-            var x = event.movementX
-            var y = event.movementY
+            var x = event.clientX
+            var y = event.clientY
             this.roomSceneObj.rotateCamera(x, y)
         })
 
