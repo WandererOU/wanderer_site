@@ -1,30 +1,30 @@
-import '../css/landing_screen.css';
-import WhiteLogo from '../assets/images/plain_white.png';
-import * as constants from '../utils/constants';
-import {TimelineMax, Power3} from 'gsap';
-import {el, setChildren} from 'redom';
+import '../css/landing_screen.css'
+import WhiteLogo from '../assets/images/plain_white.png'
+import * as constants from '../utils/constants'
+import {TimelineMax, Power3} from 'gsap'
+import {el, setChildren} from 'redom'
 
 export default class LandingPage {
     constructor() {
         // variables
-        this.activeMenu = constants.INITIAL;
+        this.activeMenu = constants.INITIAL
         this.menuTransform = {
             x: 0,
             y: 0,
         }
 
         // overlays
-        this.el = el('.overlay-container');
-        this.overlay = el('.overlay');
-        this.overlayLight = el('.overlay-light');
+        this.el = el('.overlay-container')
+        this.overlay = el('.overlay')
+        this.overlayLight = el('.overlay-light')
 
         // layout sections
-        this.topContainer = el('.top-container');
-        this.midContainer = el('.mid-container');
-        this.botContainer = el('.bot-container');
+        this.topContainer = el('.top-container')
+        this.midContainer = el('.mid-container')
+        this.botContainer = el('.bot-container')
 
         // layout components
-        this.logo = el('img#initial', {src: WhiteLogo});
+        this.logo = el('img#initial', {src: WhiteLogo})
         this.titleSection = el('.title-container', [
             el('.title', [
                 el('p', 'Augmented Reality'),
@@ -38,18 +38,18 @@ export default class LandingPage {
                     el('strong', 'will you be a part of it?')
                 )
             ]),
-        ]);
+        ])
 
         this.menuContainer = el('#menu-container.menu-container', [
             el('p#about', '01 About'),
             el('p#apps', '02 Apps'),
             el('p#blog', '03 Blog'),
             el('p#contacts', '04 Contacts')
-        ]);
+        ])
 
         this.startButton = el('#start-button#about.start-button', [
             el('span#about', 'Click here or scroll down to begin')
-        ]);
+        ])
     }
 
     onmount() {
@@ -58,58 +58,58 @@ export default class LandingPage {
     }
 
     onremount() {
-        this.clearElements();
+        this.clearElements()
 
         if(this.activeMenu === constants.INITIAL) {
-            this.renderInitialElements();
+            this.renderInitialElements()
 
-            document.getElementById('menu-container').children[0].classList.add('initial');
-            document.getElementById('menu-container').children[1].classList.add('initial');
-            document.getElementById('menu-container').children[2].classList.add('initial');
-            document.getElementById('menu-container').children[3].classList.add('initial');
+            document.getElementById('menu-container').children[0].classList.add('initial')
+            document.getElementById('menu-container').children[1].classList.add('initial')
+            document.getElementById('menu-container').children[2].classList.add('initial')
+            document.getElementById('menu-container').children[3].classList.add('initial')
         } else {
-            this.renderAlternateElements();
+            this.renderAlternateElements()
             
-            document.getElementById('menu-container').children[0].classList.remove('initial');
-            document.getElementById('menu-container').children[1].classList.remove('initial');
-            document.getElementById('menu-container').children[2].classList.remove('initial');
-            document.getElementById('menu-container').children[3].classList.remove('initial');
-            document.getElementById('menu-container').querySelector(`#${this.activeMenu}`).classList.add('selected');
+            document.getElementById('menu-container').children[0].classList.remove('initial')
+            document.getElementById('menu-container').children[1].classList.remove('initial')
+            document.getElementById('menu-container').children[2].classList.remove('initial')
+            document.getElementById('menu-container').children[3].classList.remove('initial')
+            document.getElementById('menu-container').querySelector(`#${this.activeMenu}`).classList.add('selected')
         }
     }
 
     clearElements = () => {
         if (document.getElementById('menu-container')) {
             for(let i = 0; i < document.getElementById('menu-container').children.length; i++) {
-                document.getElementById('menu-container').children[i].classList.remove('selected', 'initial');
+                document.getElementById('menu-container').children[i].classList.remove('selected', 'initial')
             }
         }
 
-        setChildren(this.botContainer, []);
-        setChildren(this.midContainer, []);
-        setChildren(this.topContainer, []);
-        setChildren(this.overlay, []);
-        setChildren(this.overlayLight, []);
-        setChildren(this.el, []);
+        setChildren(this.botContainer, [])
+        setChildren(this.midContainer, [])
+        setChildren(this.topContainer, [])
+        setChildren(this.overlay, [])
+        setChildren(this.overlayLight, [])
+        setChildren(this.el, [])
     }
 
     renderAlternateElements = () => {
-        setChildren(this.topContainer, this.logo);
-        setChildren(this.midContainer, this.menuContainer);
-        setChildren(this.overlayLight, [this.topContainer, this.midContainer, this.botContainer]);
-        setChildren(this.el, this.overlayLight);
+        setChildren(this.topContainer, this.logo)
+        setChildren(this.midContainer, this.menuContainer)
+        setChildren(this.overlayLight, [this.topContainer, this.midContainer, this.botContainer])
+        setChildren(this.el, this.overlayLight)
     }
 
     renderInitialElements = () => {
-        setChildren(this.botContainer, this.startButton);
-        setChildren(this.midContainer, [this.titleSection, this.menuContainer]);
-        setChildren(this.topContainer, this.logo);
-        setChildren(this.overlay, [this.topContainer, this.midContainer, this.botContainer]);
-        setChildren(this.el, this.overlay);
+        setChildren(this.botContainer, this.startButton)
+        setChildren(this.midContainer, [this.titleSection, this.menuContainer])
+        setChildren(this.topContainer, this.logo)
+        setChildren(this.overlay, [this.topContainer, this.midContainer, this.botContainer])
+        setChildren(this.el, this.overlay)
     }
 
     selectActiveMenu = (menu) => {
-        this.activeMenu = menu;
+        this.activeMenu = menu
     }
 
     animateTitle = () => {
@@ -117,7 +117,7 @@ export default class LandingPage {
         tl.delay(0.2)
         tl.from('.line', 0.8, {width: 0, ease: Power3.easeOut})
         tl.from('.title p', 0.8, {position: 'relative', top: '5em'}, 'reveal')
-            .to('.title p', 0.3, {position: 'relative', top: 0});
+            .to('.title p', 0.3, {position: 'relative', top: 0})
         tl.from('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, 'reveal')
         .to('.subtitle p', 0.3, {position: 'relative', top: 0})
     }

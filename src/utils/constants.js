@@ -33,7 +33,7 @@ export const menuCoordinates = {
         position: {
             x: 0,
             y: 0,
-            z: 0
+            z: -1
         },
         rotation: {
             x: 0,
@@ -81,7 +81,7 @@ export const menuCoordinates = {
         position: {
             x: 0,
             y: 0,
-            z: -4
+            z: -3.5
         },
         rotation: {
             x: 0,
