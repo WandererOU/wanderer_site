@@ -17,6 +17,9 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
+  mode: 'development',
+  cache: true,
+  devtool: 'cheap-module-inline-source-map',
   devServer: {
     contentBase: './dist',
     hot: true
@@ -56,10 +59,6 @@ module.exports = {
         use: [
           'file-loader'
         ]
-      },
-      {
-        test: /\.obj$/,
-        loader: 'webpack-obj-loader'
       }
     ]
   }

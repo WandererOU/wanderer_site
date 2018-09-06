@@ -1,10 +1,9 @@
 var THREE = require('three')
 var OBJLoader = require('three-obj-loader')
 var MTLLoader = require('three-mtl-loader')
-import {TextureLoader} from 'three-full'
 OBJLoader(THREE)
 
-import {TweenLite} from 'gsap'
+import {TweenLite, Power1} from 'gsap'
 import LoadingScreen from './loading_screen'
 import LandingPage from './landing_screen'
 import * as constants from '../utils/constants'
@@ -13,7 +12,8 @@ import {mount, unmount} from 'redom'
 export default class RoomScene {
     constructor() {
         var manager = new THREE.LoadingManager()
-        
+
+        this.isMovingCamera = false;
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
 
@@ -23,6 +23,7 @@ export default class RoomScene {
         this.el = this.renderer.domElement
 
         this.objectLoader = new THREE.OBJLoader(manager)
+        this.fontLoader = new THREE.FontLoader(manager);
         this.mtlLoader = new MTLLoader(manager)
         this.activeMenu = constants.INITIAL
     }
@@ -87,24 +88,49 @@ export default class RoomScene {
 
     renderContents = () => {
         //// ABOUT
-        var aboutGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
-        
-        // Create and set shader
-        const aboutTexture = new TextureLoader().load('/images/about_text.png')
-        let aboutShader = constants.aboutShader
-        aboutShader.uniforms.texture.value = aboutTexture
-        var aboutMaterial = new THREE.ShaderMaterial(aboutShader)
+        // var aboutGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
 
-        // Make plane transparent
-        aboutMaterial.transparent = true
-        aboutMaterial.opacity = 0.5
-        aboutMaterial.blending = THREE.SubtractiveBlending
-        
-        var aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
-        aboutMesh.position.set(2.5, -0.2, -3.3)
-        aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+        // const aboutTexture = new TextureLoader().load('/images/about_text.png')
+        // let aboutShader = constants.aboutShader
+        // aboutShader.uniforms.texture.value = aboutTexture
+        // var aboutMaterial = new THREE.ShaderMaterial(aboutShader)
 
-        this.scene.add(aboutMesh)
+        // aboutMaterial.transparent = true
+        // aboutMaterial.opacity = 0.5
+        // aboutMaterial.blending = THREE.SubtractiveBlending
+        
+        // var aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
+        // aboutMesh.position.set(2.5, -0.2, -3.3)
+        // aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+
+        // this.scene.add(aboutMesh)
+
+        // About Header
+        this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
+            var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+            var aboutHeaderGeometry = new THREE.TextGeometry("Wånderer Studio", {
+                font: font,
+                size: 0.16,
+                curveSegments: 20,
+                height: 0.01
+            });
+            var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial);
+            aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
+            aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+
+            var aboutContentsGeometry = new THREE.TextGeometry(constants.aboutContents, {
+                font: font,
+                size: 0.09,
+                curveSegments: 20,
+                height: 0.005
+            });
+            var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial);
+            aboutContentsMesh.position.set(4.3, 0.2, -8.8)
+            aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+
+            this.scene.add(aboutHeaderMesh);
+            this.scene.add(aboutContentsMesh);
+        });
 
         //// APPS
         // Mind Archive
@@ -130,22 +156,31 @@ export default class RoomScene {
     }
 
     rotateCamera = (x, y) => {
-        var sensitivity = 0.00003
+        var sensitivity = 0.00006
+
+        // Preventing camera rotation from being triggered twice
+        if(this.isMovingCamera) {
+            return;
+        }
+        
+        let deltaY = (-window.innerHeight / 2) + y;
+        let deltax = (-window.innerWidth / 2) + x;
+
         if (this.activeMenu === constants.INITIAL) {
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -y * sensitivity)
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+            let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut});
+            rotAnimation.play()
             this.renderer.render(this.scene, this.camera)
         } else if (this.activeMenu === constants.ABOUT) {
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), -y * sensitivity)
+            let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut});
+            rotAnimation.play()
             this.renderer.render(this.scene, this.camera)
         } else if (this.activeMenu === constants.APPS || this.activeMenu === constants.BLOG) {
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), y * sensitivity)
+            let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut});
+            rotAnimation.play()
             this.renderer.render(this.scene, this.camera)
         } else if (this.activeMenu === constants.CONTACTS) {
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), y * sensitivity)
-            this.camera.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -x * sensitivity)
+            let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: deltax * sensitivity, z: 0, ease: Power1.easeOut});
+            rotAnimation.play()
             this.renderer.render(this.scene, this.camera)
         }
     }
@@ -176,14 +211,22 @@ export default class RoomScene {
         this.landingPage.selectActiveMenu(menu)
         mount(document.body, this.landingPage)
 
+        this.isMovingCamera = true;
+
         this.activeMenu = menu
         let coordinates = constants.menuCoordinates[menu]
         let position = coordinates.position
         let rotation = coordinates.rotation
     
         let posAnimation = TweenLite.to(this.camera.position, 2, {x: position.x, y: position.y, z: position.z})
-        posAnimation.play()
         let rotAnimation = TweenLite.to(this.camera.rotation, 2, {x: rotation.x, y: rotation.y, z: rotation.z})
+
+        posAnimation.eventCallback('onComplete', () => {
+            this.isMovingCamera = false;
+        })
+
+        posAnimation.play()
         rotAnimation.play()
+        
     }
 }   

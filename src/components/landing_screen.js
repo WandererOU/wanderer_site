@@ -1,7 +1,7 @@
 import '../css/landing_screen.css'
 import WhiteLogo from '../assets/images/plain_white.png'
 import * as constants from '../utils/constants'
-import {TimelineMax, Power3} from 'gsap'
+import {TimelineMax, Power3, Expo} from 'gsap'
 import {el, setChildren} from 'redom'
 
 export default class LandingPage {
@@ -116,9 +116,7 @@ export default class LandingPage {
         var tl = new TimelineMax()
         tl.delay(0.2)
         tl.from('.line', 0.8, {width: 0, ease: Power3.easeOut})
-        tl.from('.title p', 0.8, {position: 'relative', top: '5em'}, 'reveal')
-            .to('.title p', 0.3, {position: 'relative', top: 0})
-        tl.from('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, 'reveal')
-        .to('.subtitle p', 0.3, {position: 'relative', top: 0})
+        tl.fromTo('.title p', 0.8, {position: 'relative', top: '5em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
+        tl.fromTo('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
     }
 }

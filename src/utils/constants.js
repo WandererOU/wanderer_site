@@ -3,6 +3,16 @@ export const ABOUT = 'about'
 export const APPS = 'apps'
 export const BLOG = 'blog'
 export const CONTACTS = 'contacts'
+export const aboutContents = [
+    'We are a company launched with the',
+    'objective of exploring the latest',
+    'advancements in AR technology.\n',
+    'And ensuring that there are useful',
+    'applicabilities for every-day life where AR',
+    'can truly allow humankind to thrive.\n',
+    'Our mission is to expand the boundaries',
+    'of human capacity beyond the physical realm.'
+].join('\n')
 
 export const aboutShader = {
     uniforms: {
@@ -43,9 +53,9 @@ export const menuCoordinates = {
     },
     about: {
         position: {
-            x: 1.5,
-            y: 0,
-            z: -3
+            x: 1.2,
+            y: -0.1,
+            z: -7.37
         },
         rotation: {
             x: 0,
