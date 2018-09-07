@@ -14,30 +14,6 @@ export const aboutContents = [
     'of human capacity beyond the physical realm.'
 ].join('\n')
 
-export const aboutShader = {
-    uniforms: {
-        texture: {
-            type: 't',
-            value: '',
-        }
-    },
-    fragmentShader: [
-        "varying vec2 vUv;",
-        "uniform sampler2D texture;",
-        "vec4 color = vec4(1.0,1.0,1.0,1.0);",
-        "void main() {",
-            "gl_FragColor = texture2D(texture, vUv) * color;", 
-        "}",
-    ].join("\n"),
-    vertexShader: [
-        'varying vec2 vUv;',
-        'void main() {',
-        'vUv = uv;',
-        'gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);',
-        '}'
-    ].join('\n')
-}
-
 export const menuCoordinates = {
     initial: {
         position: {

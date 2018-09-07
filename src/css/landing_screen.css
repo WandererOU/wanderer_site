@@ -72,7 +72,7 @@ p {
 }
 .title > p {
     font-family: 'Montserrat-Black';
-    font-size: 7em;
+    font-size: 5.5em;
     color: #735da8;
     text-align: left;
 }
@@ -92,7 +92,7 @@ p {
 
 .subtitle > p {
     font-family: 'Poppins-ExtraLight';
-    font-size: 2.5em;
+    font-size: 2.3em;
     color: #fff;
     text-align: left;
 }
