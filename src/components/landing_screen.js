@@ -27,15 +27,16 @@ export default class LandingPage {
         this.logo = el('img#initial', {src: WhiteLogo})
         this.titleSection = el('.title-container', [
             el('.title', [
-                el('p', 'Augmented Reality'),
-                el('p', 'like never before.'),
+                el('p', 'EXPERIENCE REALITY'),
+                el('p', 'LIKE NEVER BEFORE.'),
             ]),
             el('.line'),
             el('.subtitle', [
-                el('p', 'Join Wånderer Studio on its journey to create the best'),
-                el('p', 'possible experiences in Augmented Reality worlds.'),
-                el('p', 'The future is here, ',
-                    el('strong', 'will you be a part of it?')
+                el('p', 'Augmented Reality is about to change how we'),
+                el('p', 'interact with the world around us.'),
+                el('p', 'Wånderer Studio would like to invite you to '),
+                el('p', '',
+                    el('strong', 'become a part of this change.'),
                 )
             ]),
         ])

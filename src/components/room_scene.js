@@ -28,7 +28,7 @@ export default class RoomScene {
 
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
-        this.cameraContainer.position.set(0, 0, -3)
+        this.cameraContainer.position.set(0, 0, 0)
         this.cameraContainer.add(this.camera)
 
         this.scene.add(this.cameraContainer)
@@ -148,7 +148,6 @@ export default class RoomScene {
 
         let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut});
         this.renderer.render(this.scene, this.camera)
-
     }
 
     handleMoveCamera = () => {
