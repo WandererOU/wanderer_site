@@ -62,19 +62,8 @@ export default class LandingPage {
 
         if(this.activeMenu === constants.INITIAL) {
             this.renderInitialElements()
-
-            document.getElementById('menu-container').children[0].classList.add('initial')
-            document.getElementById('menu-container').children[1].classList.add('initial')
-            document.getElementById('menu-container').children[2].classList.add('initial')
-            document.getElementById('menu-container').children[3].classList.add('initial')
         } else {
             this.renderAlternateElements()
-            
-            document.getElementById('menu-container').children[0].classList.remove('initial')
-            document.getElementById('menu-container').children[1].classList.remove('initial')
-            document.getElementById('menu-container').children[2].classList.remove('initial')
-            document.getElementById('menu-container').children[3].classList.remove('initial')
-            document.getElementById('menu-container').querySelector(`#${this.activeMenu}`).classList.add('selected')
         }
     }
 
@@ -98,6 +87,12 @@ export default class LandingPage {
         setChildren(this.midContainer, this.menuContainer)
         setChildren(this.overlayLight, [this.topContainer, this.midContainer, this.botContainer])
         setChildren(this.el, this.overlayLight)
+
+        document.getElementById('menu-container').children[0].classList.remove('initial')
+        document.getElementById('menu-container').children[1].classList.remove('initial')
+        document.getElementById('menu-container').children[2].classList.remove('initial')
+        document.getElementById('menu-container').children[3].classList.remove('initial')
+        document.getElementById('menu-container').querySelector(`#${this.activeMenu}`).classList.add('selected')
     }
 
     renderInitialElements = () => {
@@ -106,6 +101,11 @@ export default class LandingPage {
         setChildren(this.topContainer, this.logo)
         setChildren(this.overlay, [this.topContainer, this.midContainer, this.botContainer])
         setChildren(this.el, this.overlay)
+
+        document.getElementById('menu-container').children[0].classList.add('initial')
+        document.getElementById('menu-container').children[1].classList.add('initial')
+        document.getElementById('menu-container').children[2].classList.add('initial')
+        document.getElementById('menu-container').children[3].classList.add('initial')
     }
 
     selectActiveMenu = (menu) => {
