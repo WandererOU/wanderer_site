@@ -23,7 +23,7 @@ class Root {
         document.addEventListener('mousemove', (event) => {
             var x = event.clientX
             var y = event.clientY
-            this.roomSceneObj.rotateCamera(x, y)
+            this.roomSceneObj.handleMouseMove(x, y)
         })
 
         window.addEventListener('wheel', () => {
