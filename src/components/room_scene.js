@@ -12,8 +12,12 @@ import {mount, unmount} from 'redom'
 export default class RoomScene {
     constructor() {
         var manager = new THREE.LoadingManager()
+        this.isMovingCamera = false
+        this.activeMenu = constants.INITIAL
 
-        this.isMovingCamera = false;
+        this.mindArchiveMesh = null
+        this.focusObjectMesh = null
+
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
 
@@ -24,14 +28,13 @@ export default class RoomScene {
         this.objectLoader = new THREE.OBJLoader(manager)
         this.fontLoader = new THREE.FontLoader(manager);
         this.mtlLoader = new MTLLoader(manager)
-        this.activeMenu = constants.INITIAL
 
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
         this.cameraContainer.position.set(0, 0, 0)
         this.cameraContainer.add(this.camera)
-
         this.scene.add(this.cameraContainer)
+
         // Set up scene
         this.createScene()
         this.renderRoom()
@@ -116,18 +119,24 @@ export default class RoomScene {
         // Mind Archive
         let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
         let mindArchiveMaterial = new THREE.MeshBasicMaterial()
-        let mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
+        this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
 
-        mindArchiveMesh.position.set(-3.05, 0, -5.6)
-        mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 1.5708)
-        mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
-        this.scene.add(mindArchiveMesh)
+        this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
+        this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 1.5708)
+        this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
+        this.scene.add(this.mindArchiveMesh)
 
         this.renderer.render(this.scene, this.camera)
     }
 
     animate = () => {
         requestAnimationFrame(this.animate)
+
+        // rotate focusObject
+        if(this.focusObjectMesh) {
+            this.focusObjectMesh.rotation.z -= 0.01
+        }
+
         this.renderer.render(this.scene, this.camera)
     }
 
@@ -135,19 +144,39 @@ export default class RoomScene {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
     }
 
-    rotateCamera = (x, y) => {
+    handleMouseMove = (x, y) => {
         var sensitivity = 0.00006
 
         // Preventing camera rotation from being triggered twice
         if(this.isMovingCamera) {
             return;
         }
-        
+
+        // mouse rotation
         let deltaY = (-window.innerHeight / 2) + y;
         let deltax = (-window.innerWidth / 2) + x;
-
         let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut});
         this.renderer.render(this.scene, this.camera)
+
+        // hover effect on objects
+        var vector = new THREE.Vector2()
+        vector.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	    vector.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+        var ray = new THREE.Raycaster()
+        ray.setFromCamera(vector, this.camera)
+        var intersects = ray.intersectObject(this.mindArchiveMesh, true)
+
+        if(intersects.length > 0) {
+            if(!this.focusObjectMesh && intersects[0].object.uuid === this.mindArchiveMesh.uuid) {
+                this.addFocusObject(intersects[0].object)
+                document.body.style.cursor = 'pointer'
+            }
+        } else {
+            this.removeFocusObject()
+            document.body.style.cursor = 'default'
+        }
+
     }
 
     handleMoveCamera = () => {
@@ -189,5 +218,26 @@ export default class RoomScene {
         posAnimation.eventCallback('onComplete', () => {
             this.isMovingCamera = false;
         })
+    }
+
+    addFocusObject = (parent) => {
+        // create geometry
+        let geometry = new THREE.TorusGeometry(0.8, 0.02, 16, 8)
+        let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide})
+        this.focusObjectMesh = new THREE.Mesh(geometry, material)
+        
+        const parentParams = parent.geometry.parameters
+        console.log(parentParams)
+        let scale = Math.max(parentParams.height, parentParams.width)
+
+        this.focusObjectMesh.scale.set(scale, scale, scale);
+        this.focusObjectMesh.position.set(parent.position.x + 0.1, parent.position.y, parent.position.z)
+        this.focusObjectMesh.rotation.set(parent.rotation.x, parent.rotation.y, parent.rotation.z)
+        this.scene.add(this.focusObjectMesh)
+    }
+
+    removeFocusObject = () => {
+        this.scene.remove(this.focusObjectMesh)
+        this.focusObjectMesh = null
     }
 }   
