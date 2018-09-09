@@ -16,7 +16,8 @@ export default class RoomScene {
         this.activeMenu = constants.INITIAL
 
         this.mindArchiveMesh = null
-        this.focusObjectMesh = null
+        this.scannerLockMesh = null
+        this.intersectedObject = null
 
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
@@ -132,9 +133,18 @@ export default class RoomScene {
     animate = () => {
         requestAnimationFrame(this.animate)
 
-        // rotate focusObject
-        if(this.focusObjectMesh) {
-            this.focusObjectMesh.rotation.z -= 0.01
+        if(this.scannerLockMesh) {
+            if (this.scannerLockMesh.geometry.parameters.arc < 6.2) {
+                let arc = this.scannerLockMesh.geometry.parameters.arc += 0.2
+                this.removeFocusObject()
+                this.addFocusObject(this.intersectedObject, arc)
+
+                // Attach text to poster object
+            
+            
+            } else {
+                this.scannerLockMesh.rotation.z -= 0.01
+            }
         }
 
         this.renderer.render(this.scene, this.camera)
@@ -168,11 +178,13 @@ export default class RoomScene {
         var intersects = ray.intersectObject(this.mindArchiveMesh, true)
 
         if(intersects.length > 0) {
-            if(!this.focusObjectMesh && intersects[0].object.uuid === this.mindArchiveMesh.uuid) {
+            this.intersectedObject = intersects[0].object
+            if(!this.scannerLockMesh && intersects[0].object.uuid === this.mindArchiveMesh.uuid) {
                 this.addFocusObject(intersects[0].object)
                 document.body.style.cursor = 'pointer'
             }
         } else {
+            this.intersectedObject = null
             this.removeFocusObject()
             document.body.style.cursor = 'default'
         }
@@ -220,24 +232,43 @@ export default class RoomScene {
         })
     }
 
-    addFocusObject = (parent) => {
+    handleClick = () => {
+        if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
+            this.landingPage.renderAppInformation('mindArchive')
+        }
+    }
+
+    addFocusObject = (parent, arc) => {
         // create geometry
-        let geometry = new THREE.TorusGeometry(0.8, 0.02, 16, 8)
-        let material = new THREE.MeshBasicMaterial({color: 0xffff00, side: THREE.DoubleSide})
-        this.focusObjectMesh = new THREE.Mesh(geometry, material)
+        let geometry = new THREE.TorusBufferGeometry(0.7, 0.03, 16, 100, arc || 0.1)
+        let material = new THREE.MeshBasicMaterial({color: 0x735da8, side: THREE.DoubleSide})
+        this.scannerLockMesh = new THREE.Mesh(geometry, material)
         
         const parentParams = parent.geometry.parameters
-        console.log(parentParams)
         let scale = Math.max(parentParams.height, parentParams.width)
 
-        this.focusObjectMesh.scale.set(scale, scale, scale);
-        this.focusObjectMesh.position.set(parent.position.x + 0.1, parent.position.y, parent.position.z)
-        this.focusObjectMesh.rotation.set(parent.rotation.x, parent.rotation.y, parent.rotation.z)
-        this.scene.add(this.focusObjectMesh)
+        this.scannerLockMesh.scale.set(scale, scale, scale);
+        this.scannerLockMesh.position.set(parent.position.x + 0.1, parent.position.y, parent.position.z)
+        this.scannerLockMesh.rotation.set(parent.rotation.x, parent.rotation.y, parent.rotation.z)
+
+        // When animated to full circle
+        if(this.scannerLockMesh.geometry.parameters.arc.toFixed(1) == 6.3) {
+            let targetGeometry1 = new THREE.TorusBufferGeometry(0.6, 0.02, 16, 100, Math.PI / 2)
+            let targetMesh1 = new THREE.Mesh(targetGeometry1, material)
+            
+            let targetGeometry2 = new THREE.TorusBufferGeometry(0.6, 0.02, 16, 100, Math.PI / 2)
+            let targetMesh2 = new THREE.Mesh(targetGeometry2, material)
+            targetMesh2.rotateZ(Math.PI)
+
+            this.scannerLockMesh.add(targetMesh1)
+            this.scannerLockMesh.add(targetMesh2)
+        }
+
+        this.scene.add(this.scannerLockMesh)
     }
 
     removeFocusObject = () => {
-        this.scene.remove(this.focusObjectMesh)
-        this.focusObjectMesh = null
+        this.scene.remove(this.scannerLockMesh)
+        this.scannerLockMesh = null
     }
 }   

@@ -51,6 +51,15 @@ export default class LandingPage {
         this.startButton = el('#start-button#about.start-button', [
             el('span#about', 'Click here or scroll down to begin')
         ])
+
+        this.appDetails = el('#app-details', [
+            el('#app-details-close-button'),
+            el('.app-details-modal', [
+                el('#app-details-title-container'),
+                el('#app-details-paragraph-container'),
+                el('#app-details-button-container'),
+            ]),
+        ])
     }
 
     onmount() {
@@ -119,5 +128,26 @@ export default class LandingPage {
         tl.from('.line', 0.8, {width: 0, ease: Power3.easeOut})
         tl.fromTo('.title p', 0.8, {position: 'relative', top: '5em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
         tl.fromTo('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
+    }
+
+    renderAppInformation = (app) => {
+        let selectedApp = constants.apps[app]
+        setChildren(this.midContainer, [this.appDetails, this.menuContainer])
+
+        document.getElementById('app-details-close-button').innerText = 'X'
+        document.getElementById('app-details-title-container').innerHTML = `<h2>${selectedApp.title}</h2>`
+        document.getElementById('app-details-paragraph-container').innerHTML = `<p>${selectedApp.description}</p>`
+
+        document.getElementById('app-details-close-button').addEventListener('click', () => this.closeAppInformation())
+
+        if(selectedApp.isReleased) {
+            document.getElementById('app-details-button-container').innerHTML = `<button>Download Here!</button>`
+        } else {
+            document.getElementById('app-details-button-container').innerHTML = `<div>Soon</div>`
+        }
+    }
+
+    closeAppInformation = () => {
+        setChildren(this.midContainer, [this.menuContainer])
     }
 }

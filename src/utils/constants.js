@@ -14,6 +14,15 @@ export const aboutContents = [
     'of human capacity beyond the physical realm.'
 ].join('\n')
 
+export const apps = {
+    mindArchive: {
+        title: 'Mind Archive',
+        description: 'Mind Archive is an application that allows you to create your own mind palace and store information in real space in an easy and intuitive manner.',
+        isReleased: false,
+        link: '',
+    }
+}
+
 export const menuCoordinates = {
     initial: {
         position: {
