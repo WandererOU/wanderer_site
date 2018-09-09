@@ -44,7 +44,7 @@ export const menuCoordinates = {
         },
         rotation: {
             x: 0,
-            y: -1.5708,
+            y: -Math.PI / 2,
             z: 0
         }
     },
@@ -56,7 +56,7 @@ export const menuCoordinates = {
         },
         rotation: {
             x: 0,
-            y: 1.5708,
+            y: Math.PI / 2,
             z: 0
         }
     },
@@ -68,19 +68,19 @@ export const menuCoordinates = {
         },
         rotation: {
             x: 0,
-            y: 1.5708,
+            y: Math.PI / 2,
             z: 0
         }
     },
     contacts: {
         position: {
-            x: 0,
+            x: 1.2,
             y: 0,
-            z: -3.5
+            z: -12
         },
         rotation: {
             x: 0,
-            y: 3.14159,
+            y: -Math.PI / 2,
             z: 0
         }
     }

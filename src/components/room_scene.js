@@ -11,13 +11,16 @@ import {mount, unmount} from 'redom'
 
 export default class RoomScene {
     constructor() {
-        var manager = new THREE.LoadingManager()
+        this.manager = new THREE.LoadingManager()
         this.isMovingCamera = false
         this.activeMenu = constants.INITIAL
 
         this.mindArchiveMesh = null
         this.scannerLockMesh = null
         this.intersectedObject = null
+        this.standardFont = null
+        this.roomObject = null
+        this.clickTestMesh = null
 
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
@@ -26,9 +29,9 @@ export default class RoomScene {
         this.renderer = new THREE.WebGLRenderer()
         this.el = this.renderer.domElement
         
-        this.objectLoader = new THREE.OBJLoader(manager)
-        this.fontLoader = new THREE.FontLoader(manager);
-        this.mtlLoader = new MTLLoader(manager)
+        this.objectLoader = new THREE.OBJLoader(this.manager)
+        this.fontLoader = new THREE.FontLoader(this.manager);
+        this.mtlLoader = new MTLLoader(this.manager)
 
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
@@ -37,14 +40,42 @@ export default class RoomScene {
         this.scene.add(this.cameraContainer)
 
         // Set up scene
-        this.createScene()
-        this.renderRoom()
-        this.renderContents() 
-        this.animate()
+        mount(document.body, this.loadingScreen)
+        this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
+            this.standardFont = font
+        })
+
+        this.mtlLoader.setPath('/scenes/room/')
+        this.mtlLoader.setTexturePath('/scenes/room/')
+        this.mtlLoader.load('CONVICT_TUNNEL.mtl', (materials) => { 
+            materials.preload()
+            this.objectLoader.setPath('/scenes/room/')
+            this.objectLoader.setMaterials(materials)
+
+            this.objectLoader.load('CONVICT_TUNNEL.obj', (object) => { 
+                this.roomObject = object
+            })
+        })
+        
+        this.manager.onProgress = (items, loaded, total) => {
+            let progress = ( loaded / total * 100 )
+                if (progress && progress > 0) {
+                    this.loadingScreen.updateProgress(progress.toString().split('.')[0])
+                }
+        }
+    
+        this.manager.onLoad = () => {
+            this.createScene()
+            this.renderRoom()
+            this.renderContents() 
+            this.animate()
+
+            mount(document.body, this.landingPage)
+            unmount(document.body, this.loadingScreen)
+        }
     }
 
     createScene = () => {
-        mount(document.body, this.loadingScreen)
         this.scene.background = new THREE.Color( 0xffffff )
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         
@@ -55,66 +86,40 @@ export default class RoomScene {
     }
 
     renderRoom = () => {
-        this.mtlLoader.setPath('/scenes/room/')
-        this.mtlLoader.setTexturePath('/scenes/room/')
+        this.roomObject.position.set(-0.4, -1.7, -11)
+        this.roomObject.rotateX(-Math.PI / 2)
+        this.roomObject.rotateY(-Math.PI / 2)
+        this.roomObject.rotateZ(-Math.PI / 2)
 
-        this.mtlLoader.load('CONVICT_TUNNEL.mtl', (materials) => {
-            materials.preload()
-            
-            this.objectLoader.setPath('/scenes/room/')
-            this.objectLoader.setMaterials(materials)
-            this.objectLoader.load('CONVICT_TUNNEL.obj', (object) => {
-                
-                object.position.set(-0.4, -1.7, -11)
-                object.rotateX(-Math.PI / 2)
-                object.rotateY(-Math.PI / 2)
-                object.rotateZ(-Math.PI / 2)
-                this.scene.add(object)
-                
-                this.renderer.render(this.scene, this.camera)
-                mount(document.body, this.landingPage)
-                unmount(document.body, this.loadingScreen)
-            }, 
-            (xhr) => {
-                let progress = ( xhr.loaded / xhr.total * 100 )
-                if (progress && progress > 0) {
-                    this.loadingScreen.updateProgress(progress.toString().split('.')[0])
-                }
-            },
-            (error) => {
-                console.log(error)
-            })
-        })
+        this.scene.add(this.roomObject)
     }
 
     renderContents = () => {
         //// ABOUT
         // About Header
-        this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
-            var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
-            var aboutHeaderGeometry = new THREE.TextGeometry("Wånderer Studio", {
-                font: font,
-                size: 0.16,
-                curveSegments: 20,
-                height: 0.01
-            });
-            var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial);
-            aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
-            aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
-
-            var aboutContentsGeometry = new THREE.TextGeometry(constants.aboutContents, {
-                font: font,
-                size: 0.09,
-                curveSegments: 20,
-                height: 0.005
-            });
-            var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial);
-            aboutContentsMesh.position.set(4.3, 0.2, -8.8)
-            aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
-
-            this.scene.add(aboutHeaderMesh);
-            this.scene.add(aboutContentsMesh);
+        var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+        var aboutHeaderGeometry = new THREE.TextGeometry("Wånderer Studio", {
+            font: this.standardFont,
+            size: 0.16,
+            curveSegments: 20,
+            height: 0.01
         });
+        var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial);
+        aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
+        aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+
+        var aboutContentsGeometry = new THREE.TextGeometry(constants.aboutContents, {
+            font: this.standardFont,
+            size: 0.09,
+            curveSegments: 20,
+            height: 0.005
+        });
+        var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial);
+        aboutContentsMesh.position.set(4.3, 0.2, -8.8)
+        aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+
+        this.scene.add(aboutHeaderMesh);
+        this.scene.add(aboutContentsMesh);
 
         //// APPS
         // Mind Archive
@@ -122,12 +127,10 @@ export default class RoomScene {
         let mindArchiveMaterial = new THREE.MeshBasicMaterial()
         this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
 
-        this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
+        this.mindArchiveMesh.position.set(-3.05, 0, -5.85)
         this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 1.5708)
         this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
         this.scene.add(this.mindArchiveMesh)
-
-        this.renderer.render(this.scene, this.camera)
     }
 
     animate = () => {
@@ -137,16 +140,11 @@ export default class RoomScene {
             if (this.scannerLockMesh.geometry.parameters.arc < 6.2) {
                 let arc = this.scannerLockMesh.geometry.parameters.arc += 0.2
                 this.removeFocusObject()
-                this.addFocusObject(this.intersectedObject, arc)
-
-                // Attach text to poster object
-            
-            
+                this.addFocusObject(this.intersectedObject, arc)            
             } else {
                 this.scannerLockMesh.rotation.z -= 0.01
             }
         }
-
         this.renderer.render(this.scene, this.camera)
     }
 
@@ -175,7 +173,8 @@ export default class RoomScene {
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
-        var intersects = ray.intersectObject(this.mindArchiveMesh, true)
+        let interceptObjects = [this.mindArchiveMesh]
+        var intersects = ray.intersectObjects(interceptObjects, true)
 
         if(intersects.length > 0) {
             this.intersectedObject = intersects[0].object
@@ -188,7 +187,6 @@ export default class RoomScene {
             this.removeFocusObject()
             document.body.style.cursor = 'default'
         }
-
     }
 
     handleMoveCamera = () => {
@@ -262,13 +260,27 @@ export default class RoomScene {
 
             this.scannerLockMesh.add(targetMesh1)
             this.scannerLockMesh.add(targetMesh2)
+
+            var clickTextGeometry = new THREE.TextGeometry("Click", {
+                font: this.standardFont,
+                size: 0.14,
+                curveSegments: 20,
+                height: 0.01
+            })
+
+            this.clickTestMesh = new THREE.Mesh(clickTextGeometry, material)
+            this.clickTestMesh.position.set(this.intersectedObject.position.x, this.intersectedObject.position.y - 0.07, this.intersectedObject.position.z + 0.21)
+            this.clickTestMesh.rotation.set(0, this.intersectedObject.rotation.y, 0)
+            this.scene.add(this.clickTestMesh)
         }
 
         this.scene.add(this.scannerLockMesh)
     }
 
     removeFocusObject = () => {
+        this.scene.remove(this.clickTestMesh)
         this.scene.remove(this.scannerLockMesh)
+        this.clickTestMesh = null
         this.scannerLockMesh = null
     }
 }   
