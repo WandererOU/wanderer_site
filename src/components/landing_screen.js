@@ -106,7 +106,6 @@ export default class LandingPage {
     }
 
     renderInitialElements = () => {
-        setChildren(this.botContainer, this.startButton)
         setChildren(this.midContainer, [this.titleSection, this.menuContainer])
         setChildren(this.topContainer, this.logo)
         setChildren(this.overlay, [this.topContainer, this.midContainer, this.botContainer])
@@ -141,9 +140,9 @@ export default class LandingPage {
         document.getElementById('app-details-close-button').addEventListener('click', () => this.closeAppInformation())
 
         if(selectedApp.isReleased) {
-            document.getElementById('app-details-button-container').innerHTML = `<button>Download Here!</button>`
+            document.getElementById('app-details-button-container').innerHTML = `<div>Download Here!</div>`
         } else {
-            document.getElementById('app-details-button-container').innerHTML = `<div>Soon</div>`
+            document.getElementById('app-details-button-container').innerHTML = `<div>Coming Soon</div>`
         }
     }
 
