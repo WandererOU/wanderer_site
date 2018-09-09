@@ -41,7 +41,10 @@ class Root {
                 this.roomSceneObj.moveCamera(constants.CONTACTS)
             } else if (event.target.id.includes(constants.INITIAL)) {
                 this.roomSceneObj.moveCamera(constants.INITIAL)
+            } else {
+                this.roomSceneObj.handleClick()
             }
+
         })
     }
 }
