@@ -1,7 +1,7 @@
 import '../css/landing_screen.css'
 import WhiteLogo from '../assets/images/plain_white.png'
 import * as constants from '../utils/constants'
-import {TimelineMax, Power3, Expo} from 'gsap'
+import {TimelineMax, Power3, Expo, TweenLite} from 'gsap'
 import {el, setChildren} from 'redom'
 
 export default class LandingPage {
@@ -21,10 +21,15 @@ export default class LandingPage {
         // layout sections
         this.topContainer = el('.top-container')
         this.midContainer = el('.mid-container')
-        this.botContainer = el('.bot-container')
 
         // layout components
         this.logo = el('img#initial', {src: WhiteLogo})
+        this.hamburgerMenu = el('.hamburger-menu', [
+            el('input', {type: 'checkbox', checked: false}),
+            el('span'),
+            el('span'),
+            el('span'),
+        ])
         this.titleSection = el('.title-container', [
             el('.title', [
                 el('p', 'EXPERIENCE REALITY'),
@@ -46,10 +51,6 @@ export default class LandingPage {
             el('p#apps', '02 Apps'),
             el('p#blog', '03 Blog'),
             el('p#contacts', '04 Contacts')
-        ])
-
-        this.startButton = el('#start-button#about.start-button', [
-            el('span#about', 'Click here or scroll down to begin')
         ])
 
         this.appDetails = el('#app-details', [
@@ -78,13 +79,12 @@ export default class LandingPage {
     }
 
     clearElements = () => {
-        if (document.getElementById('menu-container')) {
-            for(let i = 0; i < document.getElementById('menu-container').children.length; i++) {
-                document.getElementById('menu-container').children[i].classList.remove('selected', 'initial')
+        if (this.menuContainer) {
+            for(let i = 0; i < this.menuContainer.children.length; i++) {
+                this.menuContainer.children[i].classList.remove('selected', 'initial')
             }
         }
 
-        setChildren(this.botContainer, [])
         setChildren(this.midContainer, [])
         setChildren(this.topContainer, [])
         setChildren(this.overlay, [])
@@ -93,38 +93,55 @@ export default class LandingPage {
     }
 
     renderAlternateElements = () => {
-        setChildren(this.topContainer, this.logo)
+        setChildren(this.topContainer, [this.logo, this.hamburgerMenu])
         setChildren(this.midContainer, this.menuContainer)
-        setChildren(this.overlayLight, [this.topContainer, this.midContainer, this.botContainer])
+        setChildren(this.overlayLight, [this.topContainer, this.midContainer])
         setChildren(this.el, this.overlayLight)
 
-        document.getElementById('menu-container').children[0].classList.remove('initial')
-        document.getElementById('menu-container').children[1].classList.remove('initial')
-        document.getElementById('menu-container').children[2].classList.remove('initial')
-        document.getElementById('menu-container').children[3].classList.remove('initial')
-        document.getElementById('menu-container').querySelector(`#${this.activeMenu}`).classList.add('selected')
+        this.menuContainer.children[0].classList.remove('initial')
+        this.menuContainer.children[1].classList.remove('initial')
+        this.menuContainer.children[2].classList.remove('initial')
+        this.menuContainer.children[3].classList.remove('initial')
+        this.menuContainer.querySelector(`#${this.activeMenu}`).classList.add('selected')
     }
 
     renderInitialElements = () => {
         setChildren(this.midContainer, [this.titleSection, this.menuContainer])
-        setChildren(this.topContainer, this.logo)
+        setChildren(this.topContainer, [this.logo, this.hamburgerMenu])
         setChildren(this.overlay, [this.topContainer, this.midContainer, this.botContainer])
         setChildren(this.el, this.overlay)
 
-        document.getElementById('menu-container').children[0].classList.add('initial')
-        document.getElementById('menu-container').children[1].classList.add('initial')
-        document.getElementById('menu-container').children[2].classList.add('initial')
-        document.getElementById('menu-container').children[3].classList.add('initial')
+        this.hamburgerMenu.addEventListener('click', () => this.toggleNavigation());
+    
+        this.menuContainer.children[0].classList.add('initial')
+        this.menuContainer.children[1].classList.add('initial')
+        this.menuContainer.children[2].classList.add('initial')
+        this.menuContainer.children[3].classList.add('initial')
     }
 
     selectActiveMenu = (menu) => {
         this.activeMenu = menu
+
+        // Only trigger on small screens and when menu isn't initial
+        if(menu !== constants.INITIAL && window.innerWidth < 1150) {
+            this.toggleNavigation()
+        }
+    }
+
+    toggleNavigation = () => {
+        if(this.menuContainer.clientHeight === 0) {
+            this.hamburgerMenu.children[0].attributes.type.ownerElement.checked = true
+            TweenLite.to(this.menuContainer.style, 0.5, {height: '100%', ease: Power3.easeOut})
+        } else {
+            this.hamburgerMenu.children[0].attributes.type.ownerElement.checked = false
+            TweenLite.to(this.menuContainer.style, 0.5, {height: '0px', ease: Power3.easeOut}) 
+        }
     }
 
     animateTitle = () => {
         var tl = new TimelineMax()
-        tl.delay(0.2)
-        tl.from('.line', 0.8, {width: 0, ease: Power3.easeOut})
+        tl.delay(0.3)
+        tl.fromTo('.line', 0.8, {width: '0%'}, {width: '100%', ease: Power3.easeOut})
         tl.fromTo('.title p', 0.8, {position: 'relative', top: '5em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
         tl.fromTo('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
     }
@@ -149,4 +166,6 @@ export default class LandingPage {
     closeAppInformation = () => {
         setChildren(this.midContainer, [this.menuContainer])
     }
+
+
 }
