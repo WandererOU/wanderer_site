@@ -11,28 +11,35 @@ import {mount, unmount} from 'redom'
 
 export default class RoomScene {
     constructor() {
-        this.manager = new THREE.LoadingManager()
-        this.isMovingCamera = false
         this.activeMenu = constants.INITIAL
-
+        
+        // Meshes and objects
         this.mindArchiveMesh = null
         this.scannerLockMesh = null
         this.intersectedObject = null
         this.standardFont = null
         this.roomObject = null
         this.clickTestMesh = null
+        this.devBadge = null
+        this.devBadgeImage = null
 
+        // HTML pages
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
-
+        
+        // Scene components
         this.scene = new THREE.Scene()
         this.renderer = new THREE.WebGLRenderer()
         this.el = this.renderer.domElement
         
+        // Loaders
+        this.manager = new THREE.LoadingManager()
         this.objectLoader = new THREE.OBJLoader(this.manager)
-        this.fontLoader = new THREE.FontLoader(this.manager);
+        this.fontLoader = new THREE.FontLoader(this.manager)
         this.mtlLoader = new MTLLoader(this.manager)
-
+        this.textureLoader = new THREE.TextureLoader(this.manager)
+        // Camera setup
+        this.isMovingCamera = false
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
         this.cameraContainer.position.set(0, 0, 0)
@@ -43,6 +50,10 @@ export default class RoomScene {
         mount(document.body, this.loadingScreen)
         this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
             this.standardFont = font
+        })
+
+        this.textureLoader.load('/images/dev-badge.png', (image) => {
+            this.devBadgeImage = image
         })
 
         this.mtlLoader.setPath('/scenes/room/')
@@ -69,7 +80,7 @@ export default class RoomScene {
             this.renderRoom()
             this.renderContents() 
             this.animate()
-
+            
             mount(document.body, this.landingPage)
             unmount(document.body, this.loadingScreen)
         }
@@ -116,7 +127,7 @@ export default class RoomScene {
         });
         var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial);
         aboutContentsMesh.position.set(4.3, 0.2, -8.8)
-        aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+        aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
 
         this.scene.add(aboutHeaderMesh);
         this.scene.add(aboutContentsMesh);
@@ -128,9 +139,18 @@ export default class RoomScene {
         this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
 
         this.mindArchiveMesh.position.set(-3.05, 0, -5.85)
-        this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 1.5708)
+        this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
         this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
         this.scene.add(this.mindArchiveMesh)
+
+        //// BLOG
+        let blogGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
+        let blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.9, color: 0xFF0000})
+        this.devBadge = new THREE.Mesh(blogGeometry, blogMaterial)
+
+        this.devBadge.position.set(-3.05, 0, -16.35)
+        this.devBadge.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
+        this.scene.add(this.devBadge)
     }
 
     animate = () => {
@@ -138,7 +158,7 @@ export default class RoomScene {
 
         if(this.scannerLockMesh) {
             if (this.scannerLockMesh.geometry.parameters.arc < 6.2) {
-                let arc = this.scannerLockMesh.geometry.parameters.arc += 0.2
+                let arc = this.scannerLockMesh.geometry.parameters.arc += 0.25
                 this.removeFocusObject()
                 this.addFocusObject(this.intersectedObject, arc)            
             } else {
@@ -175,13 +195,13 @@ export default class RoomScene {
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
-        let interceptObjects = [this.mindArchiveMesh]
+        let interceptObjects = [this.mindArchiveMesh, this.devBadge]
         var intersects = ray.intersectObjects(interceptObjects, true)
 
         if(intersects.length > 0) {
             this.intersectedObject = intersects[0].object
-            if(!this.scannerLockMesh && intersects[0].object.uuid === this.mindArchiveMesh.uuid) {
-                this.addFocusObject(intersects[0].object)
+            if(!this.scannerLockMesh) {
+                this.addFocusObject(this.intersectedObject)
                 document.body.style.cursor = 'pointer'
             }
         } else {
@@ -235,12 +255,14 @@ export default class RoomScene {
     handleClick = () => {
         if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
             this.landingPage.renderAppInformation('mindArchive')
+        } else if (this.intersectedObject && this.intersectedObject.uuid === this.devBadge.uuid) {
+            window.open('https://dev.to/wandererstudio')
         }
     }
 
     addFocusObject = (parent, arc) => {
         // create geometry
-        let geometry = new THREE.TorusBufferGeometry(0.7, 0.03, 16, 100, arc || 0.1)
+        let geometry = new THREE.TorusBufferGeometry(0.5, 0.03, 16, 100, arc || 0.1)
         let material = new THREE.MeshBasicMaterial({color: 0x735da8, side: THREE.DoubleSide})
         this.scannerLockMesh = new THREE.Mesh(geometry, material)
         
