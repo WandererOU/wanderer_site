@@ -166,9 +166,12 @@
         line-height: 3.5rem;
         font-family: 'Poppins-ExtraLight';
         cursor: pointer;
-        margin-block-start: 0;
-        margin-block-end: 0;
         padding: 15px;
+        /* overriding user agent stylesheet */
+        margin-block-start: 0px !important;
+        -webkit-margin-before: 0px !important;
+        -webkit-margin-after: 0px !important;
+        margin-block-end: 0px !important;
 
         &.initial {
             color: #fff !important;

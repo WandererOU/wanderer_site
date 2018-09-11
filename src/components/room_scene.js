@@ -136,10 +136,10 @@ export default class RoomScene {
 
         //// BLOG
         let blogGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
-        let blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.9, color: 0xFF0000})
+        let blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.7, color: 0xFF0000})
         this.devBadge = new THREE.Mesh(blogGeometry, blogMaterial)
 
-        this.devBadge.position.set(-3.05, 0, -16.35)
+        this.devBadge.position.set(-3.0, 0, -16.38)
         this.devBadge.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
         this.scene.add(this.devBadge)
     }
@@ -152,9 +152,8 @@ export default class RoomScene {
                 let arc = this.scannerLockMesh.geometry.parameters.arc += 0.2
                 this.removeFocusObject()
                 this.addFocusObject(this.intersectedObject, arc)            
-            } else {
-                this.scannerLockMesh.rotation.z -= 0.01
             }
+            this.scannerLockMesh.rotation.z -= 0.01
         }
         this.renderer.render(this.scene, this.camera)
     }
@@ -261,15 +260,12 @@ export default class RoomScene {
 
         // When animated to full circle
         if(this.scannerLockMesh.geometry.parameters.arc.toFixed(1) == 6.3) {
-            let targetGeometry1 = new THREE.TorusBufferGeometry(0.6, 0.02, 16, 100, Math.PI / 2)
+            let targetGeometry1 = new THREE.TorusBufferGeometry(0.4, 0.02, 16, 100, Math.PI / 2)
             let targetMesh1 = new THREE.Mesh(targetGeometry1, material)
             
-            let targetGeometry2 = new THREE.TorusBufferGeometry(0.6, 0.02, 16, 100, Math.PI / 2)
+            let targetGeometry2 = new THREE.TorusBufferGeometry(0.4, 0.02, 16, 100, Math.PI / 2)
             let targetMesh2 = new THREE.Mesh(targetGeometry2, material)
             targetMesh2.rotateZ(Math.PI)
-
-            this.scannerLockMesh.add(targetMesh1)
-            this.scannerLockMesh.add(targetMesh2)
 
             var clickTextGeometry = new THREE.TextGeometry("View Scan", {
                 font: this.standardFont,
@@ -277,14 +273,15 @@ export default class RoomScene {
                 curveSegments: 20,
                 height: 0.01
             })
-
+            
             this.clickTestMesh = new THREE.Mesh(clickTextGeometry, material)
             this.clickTestMesh.position.set(this.intersectedObject.position.x, this.intersectedObject.position.y - 0.035 * scale, this.intersectedObject.position.z + 0.23 * scale)
             this.clickTestMesh.rotation.set(0, this.intersectedObject.rotation.y, 0)
-
+            
+            this.scannerLockMesh.add(targetMesh1)
+            this.scannerLockMesh.add(targetMesh2)
             this.scene.add(this.clickTestMesh)
         }
-
         this.scene.add(this.scannerLockMesh)
     }
 
