@@ -1,8 +1,7 @@
 import {el, mount} from 'redom'
 import RoomScene from './components/room_scene'
 import * as constants from './utils/constants'
-import './css/loading_screen.css'
-import './css/style.css'
+import './sass/style.scss'
 
 class Root {
     constructor() {

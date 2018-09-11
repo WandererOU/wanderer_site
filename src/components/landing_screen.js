@@ -1,4 +1,3 @@
-import '../css/landing_screen.css'
 import WhiteLogo from '../assets/images/plain_white.png'
 import * as constants from '../utils/constants'
 import {TimelineMax, Power3, Expo, TweenLite} from 'gsap'
@@ -32,15 +31,15 @@ export default class LandingPage {
         ])
         this.titleSection = el('.title-container', [
             el('.title', [
-                el('p', 'EXPERIENCE REALITY'),
-                el('p', 'LIKE NEVER BEFORE.'),
+                el('h1', 'EXPERIENCE REALITY'),
+                el('h1', 'LIKE NEVER BEFORE.'),
             ]),
             el('.line'),
             el('.subtitle', [
-                el('p', 'Augmented Reality is about to change how we'),
-                el('p', 'interact with the world around us.'),
-                el('p', 'Wånderer Studio would like to invite you to '),
-                el('p', '',
+                el('h2', 'Augmented Reality is about to change how we'),
+                el('h2', 'interact with the world around us.'),
+                el('h2', 'Wånderer Studio would like to invite you to '),
+                el('h2', '',
                     el('strong', 'become a part of this change.'),
                 )
             ]),
