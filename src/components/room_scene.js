@@ -13,16 +13,6 @@ export default class RoomScene {
     constructor() {
         this.activeMenu = constants.INITIAL
         
-        // Meshes and objects
-        this.mindArchiveMesh = null
-        this.scannerLockMesh = null
-        this.intersectedObject = null
-        this.standardFont = null
-        this.roomObject = null
-        this.clickTestMesh = null
-        this.devBadge = null
-        this.devBadgeImage = null
-
         // HTML pages
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
@@ -38,6 +28,7 @@ export default class RoomScene {
         this.fontLoader = new THREE.FontLoader(this.manager)
         this.mtlLoader = new MTLLoader(this.manager)
         this.textureLoader = new THREE.TextureLoader(this.manager)
+        
         // Camera setup
         this.isMovingCamera = false
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
@@ -70,9 +61,9 @@ export default class RoomScene {
         
         this.manager.onProgress = (items, loaded, total) => {
             let progress = ( loaded / total * 100 )
-                if (progress && progress > 0) {
-                    this.loadingScreen.updateProgress(progress.toString().split('.')[0])
-                }
+            if (progress && progress > 0) {
+                this.loadingScreen.updateProgress(progress.toString().split('.')[0])
+            }
         }
     
         this.manager.onLoad = () => {
@@ -101,7 +92,6 @@ export default class RoomScene {
         this.roomObject.rotateX(-Math.PI / 2)
         this.roomObject.rotateY(-Math.PI / 2)
         this.roomObject.rotateZ(-Math.PI / 2)
-
         this.scene.add(this.roomObject)
     }
 
@@ -119,6 +109,7 @@ export default class RoomScene {
         aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
         aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
 
+        // About Contents
         var aboutContentsGeometry = new THREE.TextGeometry(constants.aboutContents, {
             font: this.standardFont,
             size: 0.09,
@@ -158,7 +149,7 @@ export default class RoomScene {
 
         if(this.scannerLockMesh) {
             if (this.scannerLockMesh.geometry.parameters.arc < 6.2) {
-                let arc = this.scannerLockMesh.geometry.parameters.arc += 0.25
+                let arc = this.scannerLockMesh.geometry.parameters.arc += 0.2
                 this.removeFocusObject()
                 this.addFocusObject(this.intersectedObject, arc)            
             } else {
@@ -178,9 +169,7 @@ export default class RoomScene {
         var sensitivity = 0.00006
 
         // Preventing camera rotation from being triggered twice
-        if(this.isMovingCamera) {
-            return;
-        }
+        if(this.isMovingCamera) return;
 
         // mouse rotation
         let deltaY = (-window.innerHeight / 2) + y;
@@ -190,13 +179,12 @@ export default class RoomScene {
 
         // hover effect on objects
         var vector = new THREE.Vector2()
-        vector.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	    vector.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+        vector.x = ( x / window.innerWidth ) * 2 - 1;
+	    vector.y = - ( y / window.innerHeight ) * 2 + 1;
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
-        let interceptObjects = [this.mindArchiveMesh, this.devBadge]
-        var intersects = ray.intersectObjects(interceptObjects, true)
+        var intersects = ray.intersectObjects([this.mindArchiveMesh, this.devBadge], true)
 
         if(intersects.length > 0) {
             this.intersectedObject = intersects[0].object
@@ -233,12 +221,10 @@ export default class RoomScene {
     }
 
     moveCamera = (menu) => {
-        // Trigger page change
         this.landingPage.selectActiveMenu(menu)
         mount(document.body, this.landingPage)
 
         this.isMovingCamera = true;
-
         this.activeMenu = menu
         let coordinates = constants.menuCoordinates[menu]
         let position = coordinates.position
@@ -285,16 +271,17 @@ export default class RoomScene {
             this.scannerLockMesh.add(targetMesh1)
             this.scannerLockMesh.add(targetMesh2)
 
-            var clickTextGeometry = new THREE.TextGeometry("Click", {
+            var clickTextGeometry = new THREE.TextGeometry("View Scan", {
                 font: this.standardFont,
-                size: 0.14,
+                size: 0.07 * scale,
                 curveSegments: 20,
                 height: 0.01
             })
 
             this.clickTestMesh = new THREE.Mesh(clickTextGeometry, material)
-            this.clickTestMesh.position.set(this.intersectedObject.position.x, this.intersectedObject.position.y - 0.07, this.intersectedObject.position.z + 0.21)
+            this.clickTestMesh.position.set(this.intersectedObject.position.x, this.intersectedObject.position.y - 0.035 * scale, this.intersectedObject.position.z + 0.23 * scale)
             this.clickTestMesh.rotation.set(0, this.intersectedObject.rotation.y, 0)
+
             this.scene.add(this.clickTestMesh)
         }
 
