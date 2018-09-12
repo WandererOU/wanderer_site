@@ -21,7 +21,7 @@ export default class RoomScene {
         this.scene = new THREE.Scene()
         this.renderer = new THREE.WebGLRenderer()
         this.el = this.renderer.domElement
-        
+
         // Loaders
         this.manager = new THREE.LoadingManager()
         this.objectLoader = new THREE.OBJLoader(this.manager)
@@ -45,6 +45,10 @@ export default class RoomScene {
 
         this.textureLoader.load('/images/dev-badge.png', (image) => {
             this.devBadgeImage = image
+        })
+
+        this.textureLoader.load('/images/email-graffiti.png', (image) => {
+            this.contactsImage = image
         })
 
         this.mtlLoader.setPath('/scenes/room/')
@@ -99,7 +103,7 @@ export default class RoomScene {
         //// ABOUT
         // About Header
         var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
-        var aboutHeaderGeometry = new THREE.TextGeometry("Wånderer Studio", {
+        var aboutHeaderGeometry = new THREE.TextBufferGeometry("Wånderer Studio", {
             font: this.standardFont,
             size: 0.16,
             curveSegments: 20,
@@ -110,7 +114,7 @@ export default class RoomScene {
         aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
 
         // About Contents
-        var aboutContentsGeometry = new THREE.TextGeometry(constants.aboutContents, {
+        var aboutContentsGeometry = new THREE.TextBufferGeometry(constants.aboutContents, {
             font: this.standardFont,
             size: 0.09,
             curveSegments: 20,
@@ -129,7 +133,7 @@ export default class RoomScene {
         let mindArchiveMaterial = new THREE.MeshBasicMaterial()
         this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
 
-        this.mindArchiveMesh.position.set(-3.05, 0, -5.85)
+        this.mindArchiveMesh.position.set(-3.05, 0, -5.55)
         this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
         this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
         this.scene.add(this.mindArchiveMesh)
@@ -142,6 +146,21 @@ export default class RoomScene {
         this.devBadge.position.set(-3.0, 0, -16.38)
         this.devBadge.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
         this.scene.add(this.devBadge)
+
+        //// CONTACTS
+        let mailElement = document.createElement('input')
+        mailElement.id = 'email-input'
+        mailElement.value = 'info@wanderer.studio'
+        document.body.appendChild(mailElement)
+
+        let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
+        let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xFFFFFF})
+        this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
+
+        this.contactMesh.position.set(2.73, 0.2, -12.1)
+        this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
+        this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.15)
+        this.scene.add(this.contactMesh)
     }
 
     animate = () => {
@@ -150,8 +169,14 @@ export default class RoomScene {
         if(this.scannerLockMesh) {
             if (this.scannerLockMesh.geometry.parameters.arc < 6.2) {
                 let arc = this.scannerLockMesh.geometry.parameters.arc += 0.2
-                this.removeFocusObject()
-                this.addFocusObject(this.intersectedObject, arc)            
+                
+                if(this.scannerLockMesh.geometry.parameters.arc > 6.3) {
+                    this.removeScannerLock()
+                    this.addScannerLock(this.intersectedObject, arc)
+                } else {
+                    this.removeScannerLock()
+                    this.addScannerLock(this.intersectedObject, arc, 0xffb000)
+                }
             }
             this.scannerLockMesh.rotation.z -= 0.01
         }
@@ -183,17 +208,17 @@ export default class RoomScene {
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
-        var intersects = ray.intersectObjects([this.mindArchiveMesh, this.devBadge], true)
+        var intersects = ray.intersectObjects([this.mindArchiveMesh, this.devBadge, this.contactMesh], true)
 
         if(intersects.length > 0) {
             this.intersectedObject = intersects[0].object
             if(!this.scannerLockMesh) {
-                this.addFocusObject(this.intersectedObject)
+                this.addScannerLock(this.intersectedObject)
                 document.body.style.cursor = 'pointer'
             }
         } else {
             this.intersectedObject = null
-            this.removeFocusObject()
+            this.removeScannerLock()
             document.body.style.cursor = 'default'
         }
     }
@@ -240,24 +265,34 @@ export default class RoomScene {
     handleClick = () => {
         if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
             this.landingPage.renderAppInformation('mindArchive')
+            this.removeScannerLock()
+            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745)
+            this.addScannerText('Scanned', 0.8, true, 0x28a745)
         } else if (this.intersectedObject && this.intersectedObject.uuid === this.devBadge.uuid) {
             window.open('https://dev.to/wandererstudio')
+        } else if (this.intersectedObject && this.intersectedObject.uuid === this.contactMesh.uuid) {
+            document.querySelector('#email-input').select()
+            document.execCommand('copy')
+            this.removeScannerLock()
+            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745)
+            this.addScannerText('Email copied', 1.8, false, 0x28a745)
         }
     }
 
-    addFocusObject = (parent, arc) => {
-        // create geometry
-        let geometry = new THREE.TorusBufferGeometry(0.5, 0.03, 16, 100, arc || 0.1)
-        let material = new THREE.MeshBasicMaterial({color: 0x735da8, side: THREE.DoubleSide})
-        this.scannerLockMesh = new THREE.Mesh(geometry, material)
-        
+    addScannerLock = (parent, arc, color) => {
         const parentParams = parent.geometry.parameters
         let scale = Math.max(parentParams.height, parentParams.width)
+        const isLeftSide = parent.position.x < 0;
+        // create geometry
+        let geometry = new THREE.TorusBufferGeometry(0.5, 0.03, 16, 100, arc || 0.1)
+        let material = new THREE.MeshBasicMaterial({color: color || 0x735da8, side: THREE.DoubleSide})
+        this.scannerLockMesh = new THREE.Mesh(geometry, material)
 
         this.scannerLockMesh.scale.set(scale, scale, scale);
-        this.scannerLockMesh.position.set(parent.position.x + 0.1, parent.position.y, parent.position.z)
+        this.scannerLockMesh.position.set(parent.position.x * 0.95, parent.position.y, parent.position.z)
         this.scannerLockMesh.rotation.set(parent.rotation.x, parent.rotation.y, parent.rotation.z)
-
+        
+        this.addScannerText('Scanning..', scale, isLeftSide, 0xffb000)
         // When animated to full circle
         if(this.scannerLockMesh.geometry.parameters.arc.toFixed(1) == 6.3) {
             let targetGeometry1 = new THREE.TorusBufferGeometry(0.4, 0.02, 16, 100, Math.PI / 2)
@@ -267,28 +302,45 @@ export default class RoomScene {
             let targetMesh2 = new THREE.Mesh(targetGeometry2, material)
             targetMesh2.rotateZ(Math.PI)
 
-            var clickTextGeometry = new THREE.TextGeometry("View Scan", {
-                font: this.standardFont,
-                size: 0.07 * scale,
-                curveSegments: 20,
-                height: 0.01
-            })
-            
-            this.clickTestMesh = new THREE.Mesh(clickTextGeometry, material)
-            this.clickTestMesh.position.set(this.intersectedObject.position.x, this.intersectedObject.position.y - 0.035 * scale, this.intersectedObject.position.z + 0.23 * scale)
-            this.clickTestMesh.rotation.set(0, this.intersectedObject.rotation.y, 0)
-            
             this.scannerLockMesh.add(targetMesh1)
             this.scannerLockMesh.add(targetMesh2)
-            this.scene.add(this.clickTestMesh)
+            this.addScannerText('View Scan', scale, isLeftSide)
         }
         this.scene.add(this.scannerLockMesh)
     }
 
-    removeFocusObject = () => {
-        this.scene.remove(this.clickTestMesh)
+    removeScannerLock = () => {
+        this.scene.remove(this.scannerTextMesh)
         this.scene.remove(this.scannerLockMesh)
-        this.clickTestMesh = null
+        this.scannerTextMesh = null
         this.scannerLockMesh = null
+    }
+
+    addScannerText = (text, scale, isLeftSide, color) => {
+        if(this.scannerTextMesh) {
+            this.scene.remove(this.scannerTextMesh)
+            this.scannerTextMesh = null
+        }
+
+        var scannerTextGeometry = new THREE.TextBufferGeometry(text, {
+            font: this.standardFont,
+            size: 0.07 * scale,
+            curveSegments: 20,
+            height: 0.01
+        })
+        let scannerTextMaterial = new THREE.MeshBasicMaterial({color: color || 0x735da8, side: THREE.DoubleSide})
+        this.scannerTextMesh = new THREE.Mesh(scannerTextGeometry, scannerTextMaterial)
+
+        this.scannerTextMesh.geometry.computeBoundingBox()
+        const textWidth = this.scannerTextMesh.geometry.boundingBox.max.x - this.scannerTextMesh.geometry.boundingBox.min.x
+
+        this.scannerTextMesh.position.set(
+            this.intersectedObject.position.x, 
+            this.intersectedObject.position.y - 0.035 * scale, 
+            isLeftSide ? this.intersectedObject.position.z + textWidth / 2 : this.intersectedObject.position.z - textWidth / 2
+        )
+
+        this.scannerTextMesh.rotation.set(0, this.intersectedObject.rotation.y, 0)
+        this.scene.add(this.scannerTextMesh)
     }
 }   
