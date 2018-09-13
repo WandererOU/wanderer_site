@@ -102,14 +102,14 @@ export default class RoomScene {
     renderContents = () => {
         //// ABOUT
         // About Header
-        var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+        var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
         var aboutHeaderGeometry = new THREE.TextBufferGeometry("Wånderer Studio", {
             font: this.standardFont,
             size: 0.16,
             curveSegments: 20,
             height: 0.01
-        });
-        var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial);
+        })
+        var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial)
         aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
         aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
 
@@ -119,13 +119,13 @@ export default class RoomScene {
             size: 0.09,
             curveSegments: 20,
             height: 0.005
-        });
-        var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial);
+        })
+        var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial)
         aboutContentsMesh.position.set(4.3, 0.2, -8.8)
         aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
 
-        this.scene.add(aboutHeaderMesh);
-        this.scene.add(aboutContentsMesh);
+        this.scene.add(aboutHeaderMesh)
+        this.scene.add(aboutContentsMesh)
 
         //// APPS
         // Mind Archive
@@ -154,7 +154,7 @@ export default class RoomScene {
         document.body.appendChild(mailElement)
 
         let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
-        let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xFFFFFF})
+        let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0x0})
         this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
 
         this.contactMesh.position.set(2.73, 0.2, -12.1)
@@ -184,8 +184,8 @@ export default class RoomScene {
     }
 
     resizeRenderer = () => {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
+        this.camera.aspect = window.innerWidth / window.innerHeight
+        this.camera.updateProjectionMatrix()
         this.renderer.setSize(window.innerWidth, window.innerHeight)
     }
 
@@ -193,18 +193,18 @@ export default class RoomScene {
         var sensitivity = 0.00006
 
         // Preventing camera rotation from being triggered twice
-        if(this.isMovingCamera) return;
+        if(this.isMovingCamera) return
 
         // mouse rotation
-        let deltaY = (-window.innerHeight / 2) + y;
-        let deltax = (-window.innerWidth / 2) + x;
-        let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut});
+        let deltaY = (-window.innerHeight / 2) + y
+        let deltax = (-window.innerWidth / 2) + x
+        let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut})
         this.renderer.render(this.scene, this.camera)
 
         // hover effect on objects
         var vector = new THREE.Vector2()
-        vector.x = ( x / window.innerWidth ) * 2 - 1;
-	    vector.y = - ( y / window.innerHeight ) * 2 + 1;
+        vector.x = ( x / window.innerWidth ) * 2 - 1
+	    vector.y = - ( y / window.innerHeight ) * 2 + 1
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
@@ -248,7 +248,7 @@ export default class RoomScene {
         this.landingPage.selectActiveMenu(menu)
         mount(document.body, this.landingPage)
 
-        this.isMovingCamera = true;
+        this.isMovingCamera = true
         this.activeMenu = menu
         let coordinates = constants.menuCoordinates[menu]
         let position = coordinates.position
@@ -258,41 +258,44 @@ export default class RoomScene {
         let rotAnimation = TweenLite.to(this.cameraContainer.rotation, 2, {x: rotation.x, y: rotation.y, z: rotation.z})
 
         posAnimation.eventCallback('onComplete', () => {
-            this.isMovingCamera = false;
+            this.isMovingCamera = false
         })
     }
 
     handleClick = () => {
         if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
             this.landingPage.renderAppInformation('mindArchive')
+            let rotation = this.scannerLockMesh.rotation.z
             this.removeScannerLock()
-            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745)
-            this.addScannerText('Scanned', 0.8, true, 0x28a745)
+            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation)
+            this.addScannerText('Viewing', 0.8, true, 0x28a745)
         } else if (this.intersectedObject && this.intersectedObject.uuid === this.devBadge.uuid) {
             window.open('https://dev.to/wandererstudio')
         } else if (this.intersectedObject && this.intersectedObject.uuid === this.contactMesh.uuid) {
             document.querySelector('#email-input').select()
             document.execCommand('copy')
+            let rotation = this.scannerLockMesh.rotation.z
             this.removeScannerLock()
-            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745)
+            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation)
             this.addScannerText('Email copied', 1.8, false, 0x28a745)
         }
     }
 
-    addScannerLock = (parent, arc, color) => {
+    addScannerLock = (parent, arc, color, rotationZ) => {
         const parentParams = parent.geometry.parameters
         let scale = Math.max(parentParams.height, parentParams.width)
-        const isLeftSide = parent.position.x < 0;
+        const isLeftSide = parent.position.x < 0
         // create geometry
         let geometry = new THREE.TorusBufferGeometry(0.5, 0.03, 16, 100, arc || 0.1)
         let material = new THREE.MeshBasicMaterial({color: color || 0x735da8, side: THREE.DoubleSide})
+
         this.scannerLockMesh = new THREE.Mesh(geometry, material)
 
-        this.scannerLockMesh.scale.set(scale, scale, scale);
+        this.scannerLockMesh.scale.set(scale, scale, scale)
         this.scannerLockMesh.position.set(parent.position.x * 0.95, parent.position.y, parent.position.z)
-        this.scannerLockMesh.rotation.set(parent.rotation.x, parent.rotation.y, parent.rotation.z)
-        
-        this.addScannerText('Scanning..', scale, isLeftSide, 0xffb000)
+        this.scannerLockMesh.rotation.set(parent.rotation.x, parent.rotation.y, rotationZ || parent.rotation.z)
+        this.addScannerText('Scanning...', scale, isLeftSide, 0xffb000)
+
         // When animated to full circle
         if(this.scannerLockMesh.geometry.parameters.arc.toFixed(1) == 6.3) {
             let targetGeometry1 = new THREE.TorusBufferGeometry(0.4, 0.02, 16, 100, Math.PI / 2)
@@ -326,7 +329,11 @@ export default class RoomScene {
             font: this.standardFont,
             size: 0.07 * scale,
             curveSegments: 20,
-            height: 0.01
+            height: 0.01,
+            bevelEnabled: true,
+            bevelSize: 0.002,
+            bevelThickness: 0.002,
+            bevelSegments: 1
         })
         let scannerTextMaterial = new THREE.MeshBasicMaterial({color: color || 0x735da8, side: THREE.DoubleSide})
         this.scannerTextMesh = new THREE.Mesh(scannerTextGeometry, scannerTextMaterial)
