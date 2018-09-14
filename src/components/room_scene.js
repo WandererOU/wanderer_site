@@ -47,6 +47,10 @@ export default class RoomScene {
             this.devBadgeImage = image
         })
 
+        this.textureLoader.load('/images/about_text.png', (image) => {
+            this.aboutImage = image
+        })
+
         this.textureLoader.load('/images/email-graffiti.png', (image) => {
             this.contactsImage = image
         })
@@ -102,30 +106,35 @@ export default class RoomScene {
     renderContents = () => {
         //// ABOUT
         // About Header
-        var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
-        var aboutHeaderGeometry = new THREE.TextBufferGeometry("Wånderer Studio", {
-            font: this.standardFont,
-            size: 0.16,
-            curveSegments: 20,
-            height: 0.01
-        })
-        var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial)
-        aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
-        aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
+        // var abouttextMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
+        // var aboutHeaderGeometry = new THREE.TextBufferGeometry("Wånderer Studio", {
+        //     font: this.standardFont,
+        //     size: 0.16,
+        //     curveSegments: 20,
+        //     height: 0.01
+        // })
+        // var aboutHeaderMesh = new THREE.Mesh(aboutHeaderGeometry, abouttextMaterial)
+        // aboutHeaderMesh.position.set(4.3, 0.6, -8.8)
+        // aboutHeaderMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -1.5708)
 
-        // About Contents
-        var aboutContentsGeometry = new THREE.TextBufferGeometry(constants.aboutContents, {
-            font: this.standardFont,
-            size: 0.09,
-            curveSegments: 20,
-            height: 0.005
-        })
-        var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial)
-        aboutContentsMesh.position.set(4.3, 0.2, -8.8)
-        aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
-
-        this.scene.add(aboutHeaderMesh)
-        this.scene.add(aboutContentsMesh)
+        // // About Contents
+        // var aboutContentsGeometry = new THREE.TextBufferGeometry(constants.aboutContents, {
+        //     font: this.standardFont,
+        //     size: 0.09,
+        //     curveSegments: 20,
+        //     height: 0.005
+        // })
+        // var aboutContentsMesh = new THREE.Mesh(aboutContentsGeometry, abouttextMaterial)
+        // aboutContentsMesh.position.set(4.3, 0.2, -8.8)
+        // aboutContentsMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
+        // this.scene.add(aboutHeaderMesh)
+        // this.scene.add(aboutContentsMesh)
+        let aboutGeometry = new THREE.PlaneGeometry(2.0, 2.0)
+        let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
+        this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
+        this.aboutMesh.position.set(3.2, -0.4, -7.35)
+        this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
+        this.scene.add(this.aboutMesh)
 
         //// APPS
         // Mind Archive
@@ -148,10 +157,14 @@ export default class RoomScene {
         this.scene.add(this.devBadge)
 
         //// CONTACTS
-        let mailElement = document.createElement('input')
-        mailElement.id = 'email-input'
-        mailElement.value = 'info@wanderer.studio'
-        document.body.appendChild(mailElement)
+        let mailContainer = document.createElement('div')
+        mailContainer.id = 'email-container'
+        let mailInput = document.createElement('input')
+        mailInput.id = 'email-input'
+        mailInput.value = 'info@wanderer.studio'
+
+        document.body.appendChild(mailContainer)
+        document.getElementById('email-container').appendChild(mailInput)
 
         let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
         let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0x0})
