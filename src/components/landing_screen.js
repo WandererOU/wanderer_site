@@ -141,8 +141,8 @@ export default class LandingPage {
         var tl = new TimelineMax()
         tl.delay(0.3)
         tl.to('div.line', 0.8, {width: '100%', ease: Power3.easeOut})
-        tl.fromTo('h1', 0.8, {top: '5em'}, {top: 0, ease: Expo.easeOut}, 'reveal')
-        tl.fromTo('h2', 0.8, {top: '-11em'}, {top: 0, ease: Expo.easeOut}, 'reveal')
+        tl.fromTo('h1', 0.8, {top: '6em'}, {top: 0, ease: Expo.easeOut}, 'reveal')
+        tl.fromTo('h2', 0.8, {top: '-12em'}, {top: 0, ease: Expo.easeOut}, 'reveal')
     }
 
     renderAppInformation = (app) => {
