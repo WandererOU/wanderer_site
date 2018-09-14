@@ -7,7 +7,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: './src/index.js',
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    // new CleanWebpackPlugin(['dist']),
     new CopyWebpackPlugin([
         { from: './src/assets' }
     ]),

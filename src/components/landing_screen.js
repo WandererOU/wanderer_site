@@ -140,9 +140,9 @@ export default class LandingPage {
     animateTitle = () => {
         var tl = new TimelineMax()
         tl.delay(0.3)
-        tl.fromTo('.line', 0.8, {width: '0%'}, {width: '100%', ease: Power3.easeOut})
-        tl.fromTo('.title p', 0.8, {position: 'relative', top: '5em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
-        tl.fromTo('.subtitle p', 0.8, {position: 'relative', top: '-11em'}, {position: 'relative', top: 0, ease: Expo.easeOut}, 'reveal')
+        tl.to('div.line', 0.8, {width: '100%', ease: Power3.easeOut})
+        tl.fromTo('h1', 0.8, {top: '5em'}, {top: 0, ease: Expo.easeOut}, 'reveal')
+        tl.fromTo('h2', 0.8, {top: '-11em'}, {top: 0, ease: Expo.easeOut}, 'reveal')
     }
 
     renderAppInformation = (app) => {
