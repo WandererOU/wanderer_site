@@ -23,8 +23,8 @@ export default class LandingPage {
 
         // layout components
         this.logo = el('img#initial', {src: WhiteLogo})
-        this.hamburgerMenu = el('.hamburger-menu', [
-            el('input', {type: 'checkbox', checked: false}),
+        this.hamburgerMenu = el('#hamburger-menu.hamburger-menu', [
+            el('input#hamburger-menu-checkbot', {type: 'checkbox', checked: false}),
             el('span'),
             el('span'),
             el('span'),
