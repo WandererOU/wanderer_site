@@ -17,7 +17,7 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
-  mode: 'development',
+  mode: 'production',
   cache: true,
   devtool: 'cheap-module-inline-source-map',
   devServer: {
