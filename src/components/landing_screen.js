@@ -93,7 +93,7 @@ export default class LandingPage {
 
     renderAlternateElements = () => {
         setChildren(this.topContainer, [this.logo, this.hamburgerMenu])
-        setChildren(this.midContainer, this.menuContainer)
+        setChildren(this.midContainer, [this.menuContainer])
         setChildren(this.overlayLight, [this.topContainer, this.midContainer])
         setChildren(this.el, this.overlayLight)
 

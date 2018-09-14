@@ -275,6 +275,15 @@ export default class RoomScene {
         })
     }
 
+    handleOrientation = () => {
+        let x = event.beta - 90;
+        let y = event.gamma;
+        const sensitivity = 0.006
+
+        this.camera.rotation.set(x * sensitivity, y * sensitivity, 0);
+        this.renderer.render(this.scene, this.camera)
+    }
+
     handleClick = () => {
         if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
             this.landingPage.renderAppInformation('mindArchive')

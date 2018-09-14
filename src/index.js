@@ -28,6 +28,8 @@ class Root {
         window.addEventListener('wheel', () => {
             this.roomSceneObj.handleMoveCamera()
         })
+
+        window.addEventListener('deviceorientation', this.roomSceneObj.handleOrientation)
         
         document.addEventListener('click', (event) => {
             if(event.target.id.includes(constants.ABOUT)) {
@@ -43,7 +45,22 @@ class Root {
             } else {
                 this.roomSceneObj.handleClick()
             }
+        })
 
+        document.addEventListener('touchstart', (event) => {
+            if(event.target.id.includes(constants.ABOUT)) {
+                this.roomSceneObj.moveCamera(constants.ABOUT)
+            } else if (event.target.id.includes(constants.APPS)) {
+                this.roomSceneObj.moveCamera(constants.APPS)
+            } else if (event.target.id.includes(constants.BLOG)) {
+                this.roomSceneObj.moveCamera(constants.BLOG)
+            } else if (event.target.id.includes(constants.CONTACTS)) {
+                this.roomSceneObj.moveCamera(constants.CONTACTS)
+            } else if (event.target.id.includes(constants.INITIAL)) {
+                this.roomSceneObj.moveCamera(constants.INITIAL)
+            } else {
+                this.roomSceneObj.handleClick()
+            }
         })
     }
 }
