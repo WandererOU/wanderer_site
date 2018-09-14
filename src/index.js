@@ -15,6 +15,11 @@ class Root {
     }
 
     registerEventListeners = () => {
+        const testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+    		       'BlackBerry|Windows Phone|'  +
+    		       'Opera Mini|IEMobile|Mobile' , 
+                  'i')
+
         window.addEventListener('resize', () => { 
             this.roomSceneObj.resizeRenderer()
         })
@@ -29,39 +34,35 @@ class Root {
             this.roomSceneObj.handleMoveCamera()
         })
 
-        window.addEventListener('deviceorientation', this.roomSceneObj.handleOrientation)
+        window.addEventListener('devicemotion', this.roomSceneObj.handleMobileMotion)
         
-        document.addEventListener('click', (event) => {
-            if(event.target.id.includes(constants.ABOUT)) {
-                this.roomSceneObj.moveCamera(constants.ABOUT)
-            } else if (event.target.id.includes(constants.APPS)) {
-                this.roomSceneObj.moveCamera(constants.APPS)
-            } else if (event.target.id.includes(constants.BLOG)) {
-                this.roomSceneObj.moveCamera(constants.BLOG)
-            } else if (event.target.id.includes(constants.CONTACTS)) {
-                this.roomSceneObj.moveCamera(constants.CONTACTS)
-            } else if (event.target.id.includes(constants.INITIAL)) {
-                this.roomSceneObj.moveCamera(constants.INITIAL)
-            } else {
-                this.roomSceneObj.handleClick()
-            }
-        })
+        if (testExp.test(navigator.userAgent)) {
+            document.addEventListener('touchend', (event) => {
+                this.handleClickAndTap(event)
+            })
+        } else {
+            document.addEventListener('click', (event) => {
+                this.handleClickAndTap(event)
+            })
+        }
+    }
 
-        document.addEventListener('touchstart', (event) => {
-            if(event.target.id.includes(constants.ABOUT)) {
-                this.roomSceneObj.moveCamera(constants.ABOUT)
-            } else if (event.target.id.includes(constants.APPS)) {
-                this.roomSceneObj.moveCamera(constants.APPS)
-            } else if (event.target.id.includes(constants.BLOG)) {
-                this.roomSceneObj.moveCamera(constants.BLOG)
-            } else if (event.target.id.includes(constants.CONTACTS)) {
-                this.roomSceneObj.moveCamera(constants.CONTACTS)
-            } else if (event.target.id.includes(constants.INITIAL)) {
-                this.roomSceneObj.moveCamera(constants.INITIAL)
-            } else {
-                this.roomSceneObj.handleClick()
-            }
-        })
+    handleClickAndTap = (event) => {
+        const targetId = event.target.id
+        
+        if(targetId.includes(constants.ABOUT)) {
+            this.roomSceneObj.moveCamera(constants.ABOUT)
+        } else if (targetId.includes(constants.APPS)) {
+            this.roomSceneObj.moveCamera(constants.APPS)
+        } else if (targetId.includes(constants.BLOG)) {
+            this.roomSceneObj.moveCamera(constants.BLOG)
+        } else if (targetId.includes(constants.CONTACTS)) {
+            this.roomSceneObj.moveCamera(constants.CONTACTS)
+        } else if (targetId.includes(constants.INITIAL)) {
+            this.roomSceneObj.moveCamera(constants.INITIAL)
+        } else if (targetId.length === 0) {
+            this.roomSceneObj.handleClick()
+        }
     }
 }
 

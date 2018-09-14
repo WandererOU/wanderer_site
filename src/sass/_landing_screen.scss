@@ -272,7 +272,24 @@
 /* On smaller devices (tablets and mobiles) */
 @media only screen and (max-width: 1150px) {
     #app-details {
-        max-width: 100%;
+        max-width: 100% !important;
+
+        .app-details-modal {
+            padding: 20px !important;
+
+            #app-details-title-container {
+                font-size: 8vw !important
+            }
+            #app-details-paragraph-container {
+                font-size: 4.2vw !important;
+            }
+            #app-details-button-container {
+                div {
+                    font-size: 4.5vw !important;
+                    padding: 10px !important;
+                }
+            }
+        }
     }
 
     .title-container {
@@ -305,15 +322,4 @@
     .mid-container {
         padding: 30px;
     }
-
-    #reset-camera {
-        display: block !important;
-    }
 } 
-
-/* On desktops and above */
-// @media only screen and (min-width: 1150px) { 
-//     .menu-container {
-        
-//     }
-// }
