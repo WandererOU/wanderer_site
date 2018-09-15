@@ -20,27 +20,27 @@ class Root {
     		       'Opera Mini|IEMobile|Mobile' , 
                   'i')
 
-        window.addEventListener('resize', () => { 
-            this.roomSceneObj.resizeRenderer()
-        })
-
-        document.addEventListener('mousemove', (event) => {
-            var x = event.clientX
-            var y = event.clientY
-            this.roomSceneObj.handleMouseMove(x, y)
-        })
-
-        window.addEventListener('wheel', () => {
-            this.roomSceneObj.handleMoveCamera()
-        })
-
-        window.addEventListener('devicemotion', this.roomSceneObj.handleMobileMotion)
-        
         if (testExp.test(navigator.userAgent)) {
+            window.addEventListener('devicemotion', this.roomSceneObj.handleMobileMotion)
+        
             document.addEventListener('touchend', (event) => {
                 this.handleClickAndTap(event)
             })
         } else {
+            window.addEventListener('wheel', () => {
+                this.roomSceneObj.handleMoveCamera()
+            })
+
+            window.addEventListener('resize', () => { 
+                this.roomSceneObj.resizeRenderer()
+            })
+
+            document.addEventListener('mousemove', (event) => {
+                var x = event.clientX
+                var y = event.clientY
+                this.roomSceneObj.handleMouseMove(x, y)
+            })
+
             document.addEventListener('click', (event) => {
                 this.handleClickAndTap(event)
             })
