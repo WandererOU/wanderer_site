@@ -22,7 +22,7 @@ export default class LandingPage {
         this.midContainer = el('.mid-container')
 
         // layout components
-        this.logo = el('img#initial', {src: WhiteLogo})
+        this.logo = el('img#initial', {src: WhiteLogo, alt: 'Wanderer Studio Logo'})
         this.hamburgerMenu = el('#hamburger-menu.hamburger-menu', [
             el('input#hamburger-menu-checkbot', {type: 'checkbox', checked: false}),
             el('span'),

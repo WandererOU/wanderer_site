@@ -7,7 +7,7 @@ export default class LoadingScreen {
         this.el = el('#loading-page-container')
         this.percentage = el('span#percentage', `${this.progress}%`)
         this.loadingComponent = el('.loading-component-container')
-        this.image = el('img', {src: WhiteLogo})
+        this.image = el('img', {src: WhiteLogo, alt: 'Wanderer Studio Logo'})
         this.progressBar = el('#loading-component-progress')
 
         this.updateProgress = this.updateProgress.bind(this)

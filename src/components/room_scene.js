@@ -16,6 +16,7 @@ export default class RoomScene {
         // HTML pages
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
+        mount(document.body, this.loadingScreen)
         
         // Scene components
         this.scene = new THREE.Scene()
@@ -38,7 +39,6 @@ export default class RoomScene {
         this.scene.add(this.cameraContainer)
 
         // Set up scene
-        mount(document.body, this.loadingScreen)
         this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
             this.standardFont = font
         })
@@ -138,14 +138,14 @@ export default class RoomScene {
         this.scene.add(this.devBadge)
 
         //// CONTACTS
-        let mailContainer = document.createElement('div')
-        mailContainer.id = 'email-container'
-        let mailInput = document.createElement('input')
-        mailInput.id = 'email-input'
-        mailInput.value = 'info@wanderer.studio'
+        // let mailContainer = document.createElement('div')
+        // mailContainer.id = 'email-container'
+        // let mailInput = document.createElement('input')
+        // mailInput.id = 'email-input'
+        // mailInput.value = 'info@wanderer.studio'
 
-        document.body.appendChild(mailContainer)
-        document.getElementById('email-container').appendChild(mailInput)
+        // document.body.appendChild(mailContainer)
+        // document.getElementById('email-container').appendChild(mailInput)
 
         let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
         let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
