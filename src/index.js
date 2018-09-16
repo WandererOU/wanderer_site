@@ -29,7 +29,7 @@ class Root {
         } else {
             window.addEventListener('wheel', () => {
                 this.roomSceneObj.handleMoveCamera()
-            })
+            }, {passive: true})
 
             window.addEventListener('resize', () => { 
                 this.roomSceneObj.resizeRenderer()
