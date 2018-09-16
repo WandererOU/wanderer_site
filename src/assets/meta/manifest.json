@@ -1,0 +1,8 @@
+{
+  "name": "Wånderer Studio",
+  "theme_color": "#604D8D",
+  "background_color": "#ffffff",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait"
+}
