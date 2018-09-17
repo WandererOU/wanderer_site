@@ -17,6 +17,7 @@ export default class RoomScene {
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
         mount(document.body, this.loadingScreen)
+        mount(document.body, this.landingPage)
         
         // Scene components
         this.scene = new THREE.Scene()
@@ -83,10 +84,8 @@ export default class RoomScene {
             this.renderRoom()
             this.renderContents() 
             this.isMovingCamera = false
-            this.animate()
-            
-            mount(document.body, this.landingPage)
             unmount(document.body, this.loadingScreen)
+            this.animate()
         }
     }
 
