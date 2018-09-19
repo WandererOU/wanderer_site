@@ -40,24 +40,63 @@ export default class RoomScene {
         this.scene.add(this.cameraContainer)
 
         // Set up scene
+        this.createScene()
         this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
             this.standardFont = font
         })
 
         this.textureLoader.load('/images/dev-badge.png', (image) => {
             this.devBadgeImage = image
+
+            let blogGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
+            let blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.7, color: 0xFF0000})
+            this.devBadge = new THREE.Mesh(blogGeometry, blogMaterial)
+            this.devBadge.position.set(-3.0, 0, -16.38)
+            this.devBadge.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
+            this.scene.add(this.devBadge)
         })
 
         this.textureLoader.load('/images/about_text.png', (image) => {
             this.aboutImage = image
+
+            let aboutGeometry = new THREE.PlaneGeometry(2.0, 2.0)
+            let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
+            this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
+            this.aboutMesh.position.set(3.2, -0.4, -7.35)
+            this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
+            this.scene.add(this.aboutMesh)
         })
 
         this.textureLoader.load('/images/email-graffiti.png', (image) => {
             this.contactsImage = image
+
+            // let mailContainer = document.createElement('div')
+            // mailContainer.id = 'email-container'
+            // let mailInput = document.createElement('input')
+            // mailInput.id = 'email-input'
+            // mailInput.value = 'info@wanderer.studio'
+
+            // document.body.appendChild(mailContainer)
+            // document.getElementById('email-container').appendChild(mailInput)
+            let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
+            let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
+            this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
+            this.contactMesh.position.set(2.73, 0.2, -12.1)
+            this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
+            this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.15)
+            this.scene.add(this.contactMesh)
         })
 
         this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
             this.mindArchivePoster = image
+
+            let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
+            let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
+            this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
+            this.mindArchiveMesh.position.set(-3.05, 0, -5.55)
+            this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
+            this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
+            this.scene.add(this.mindArchiveMesh)
         })
 
         this.mtlLoader.setPath('/scenes/room/')
@@ -69,6 +108,7 @@ export default class RoomScene {
 
             this.objectLoader.load('CONVICT_TUNNEL.obj', (object) => { 
                 this.roomObject = object
+                this.renderRoom()
             })
         })
         
@@ -78,25 +118,22 @@ export default class RoomScene {
                 this.loadingScreen.updateProgress(progress.toString().split('.')[0])
             }
         }
-    
+
         this.manager.onLoad = () => {
-            this.createScene()
-            this.renderRoom()
-            this.renderContents() 
-            this.isMovingCamera = false
-            unmount(document.body, this.loadingScreen)
             this.animate()
+            document.getElementById('loading-page-container').style.display = 'none'
+            this.isMovingCamera = false
         }
     }
 
     createScene = () => {
         this.scene.background = new THREE.Color( 0xffffff )
         this.renderer.setSize(window.innerWidth, window.innerHeight)
-        
         // Simulate sunlight
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
         hemiLight.position.set(0, 400, 0)
         this.scene.add(hemiLight)
+
     }
 
     renderRoom = () => {
@@ -106,55 +143,6 @@ export default class RoomScene {
         this.roomObject.rotateY(-Math.PI / 2)
         this.roomObject.rotateZ(-Math.PI / 2)
         this.scene.add(this.roomObject)
-    }
-
-    renderContents = () => {
-        //// ABOUT
-        let aboutGeometry = new THREE.PlaneGeometry(2.0, 2.0)
-        let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
-        this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
-        this.aboutMesh.position.set(3.2, -0.4, -7.35)
-        this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
-        this.scene.add(this.aboutMesh)
-
-        //// APPS
-        // Mind Archive
-        let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
-        let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
-        this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
-
-        this.mindArchiveMesh.position.set(-3.05, 0, -5.55)
-        this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
-        this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
-        this.scene.add(this.mindArchiveMesh)
-
-        //// BLOG
-        let blogGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
-        let blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.7, color: 0xFF0000})
-        this.devBadge = new THREE.Mesh(blogGeometry, blogMaterial)
-
-        this.devBadge.position.set(-3.0, 0, -16.38)
-        this.devBadge.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
-        this.scene.add(this.devBadge)
-
-        //// CONTACTS
-        // let mailContainer = document.createElement('div')
-        // mailContainer.id = 'email-container'
-        // let mailInput = document.createElement('input')
-        // mailInput.id = 'email-input'
-        // mailInput.value = 'info@wanderer.studio'
-
-        // document.body.appendChild(mailContainer)
-        // document.getElementById('email-container').appendChild(mailInput)
-
-        let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
-        let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
-        this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
-
-        this.contactMesh.position.set(2.73, 0.2, -12.1)
-        this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
-        this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.15)
-        this.scene.add(this.contactMesh)
     }
 
     animate = () => {
@@ -314,7 +302,6 @@ export default class RoomScene {
         this.scannerLockMesh.scale.set(scale, scale, scale)
         this.scannerLockMesh.position.set(parent.position.x * 0.95, parent.position.y, parent.position.z)
         this.scannerLockMesh.rotation.set(parent.rotation.x, parent.rotation.y, rotationZ || parent.rotation.z)
-        // this.addScannerText('Scanning...', scale, isLeftSide, 0xffb000)
 
         // When animated to full circle
         if(this.scannerLockMesh.geometry.parameters.arc.toFixed(1) == 6.3) {
