@@ -100,6 +100,7 @@ export default class RoomScene {
     }
 
     renderRoom = () => {
+        this.roomObject.scale.set(0.0065541567816092, 0.0065541567816092, 0.0065541567816092);
         this.roomObject.position.set(-0.4, -1.7, -11)
         this.roomObject.rotateX(-Math.PI / 2)
         this.roomObject.rotateY(-Math.PI / 2)

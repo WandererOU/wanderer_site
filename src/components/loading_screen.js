@@ -1,4 +1,3 @@
-import WhiteLogo from '../assets/images/plain_white.png'
 import {el, setChildren} from 'redom'
 
 export default class LoadingScreen {
@@ -7,7 +6,7 @@ export default class LoadingScreen {
         this.el = el('#loading-page-container')
         this.percentage = el('span#percentage', `${this.progress}%`)
         this.loadingComponent = el('.loading-component-container')
-        this.image = el('img', {src: WhiteLogo, alt: 'Wanderer Studio Logo'})
+        this.image = el('img', {src: '/images/plain_white.png', alt: 'Wanderer Studio Logo'})
         this.progressBar = el('#loading-component-progress')
 
         this.updateProgress = this.updateProgress.bind(this)
