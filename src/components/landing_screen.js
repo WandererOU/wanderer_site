@@ -1,4 +1,3 @@
-import WhiteLogo from '../assets/images/plain_white.png'
 import * as constants from '../utils/constants'
 import {TimelineMax, Power3, Expo, TweenLite} from 'gsap'
 import {el, setChildren} from 'redom'
@@ -22,7 +21,7 @@ export default class LandingPage {
         this.midContainer = el('.mid-container')
 
         // layout components
-        this.logo = el('img#initial', {src: WhiteLogo, alt: 'Wanderer Studio Logo'})
+        this.logo = el('img#initial', {src: '/images/plain_white.png', alt: 'Wanderer Studio Logo'})
         this.hamburgerMenu = el('#hamburger-menu.hamburger-menu', [
             el('input#hamburger-menu-checkbot', {type: 'checkbox', checked: false}),
             el('span'),

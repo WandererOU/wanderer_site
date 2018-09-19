@@ -18,7 +18,10 @@ module.exports = {
       }
     }),
     new CopyWebpackPlugin([
-        { from: './src/assets' }
+        { from: './src/assets/images', to: 'images' },
+        { from: './src/assets/fonts/Poppins_SemiBold.json', to: 'fonts'},
+        { from: './src/assets/scenes', to: 'scenes' },
+        { from: './src/assets/meta', to: 'meta'}
     ]),
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
