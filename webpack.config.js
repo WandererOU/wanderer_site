@@ -3,12 +3,13 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.js',
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    // new CleanWebpackPlugin(['dist']),
     new UglifyJsPlugin({
       uglifyOptions: {
         beautify: false,
@@ -23,6 +24,7 @@ module.exports = {
         { from: './src/assets/scenes', to: 'scenes' },
         { from: './src/assets/meta', to: 'meta'}
     ]),
+    new ExtractTextPlugin("styles.css"),
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
       template: 'index.html'
@@ -55,11 +57,10 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'sass-loader']
+        })
       },
       {
         test: /\.(png|svg|jpg|gif)$/,

@@ -24,6 +24,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "^1.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
     "sass-loader": "^7.1.0",
@@ -41,6 +42,6 @@
     "redom": "^3.12.7",
     "three": "^0.95.0",
     "three-mtl-loader": "avasconcelos114/three-mtl-loader",
-    "three-obj-loader": "^1.1.3"
+    "three-obj-loader": "avasconcelos114/three-object-loader"
   }
 }
