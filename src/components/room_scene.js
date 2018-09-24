@@ -18,7 +18,7 @@ export default class RoomScene {
         
         // Scene components
         this.scene = new THREE.Scene()
-        this.renderer = new THREE.WebGLRenderer()
+        this.renderer = new THREE.WebGLRenderer({precision: 'lowp'})
         this.el = this.renderer.domElement
 
         // Loaders
@@ -72,9 +72,9 @@ export default class RoomScene {
             // let mailInput = document.createElement('input')
             // mailInput.id = 'email-input'
             // mailInput.value = 'info@wanderer.studio'
-
             // document.body.appendChild(mailContainer)
             // document.getElementById('email-container').appendChild(mailInput)
+
             let contactGeometry = new THREE.PlaneBufferGeometry(1.8, 0.38)
             let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
             this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
@@ -97,8 +97,12 @@ export default class RoomScene {
         })
 
         this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
-            this.roomObject = object.scene.children[0]
-            this.renderRoom()
+            let tunnel = object.scene.children[0]
+            tunnel.position.set(-0.4, -1.7, -11)
+            tunnel.rotateX(-Math.PI / 2)
+            tunnel.rotateY(-Math.PI / 2)
+            tunnel.rotateZ(-Math.PI / 2)
+            this.scene.add(tunnel)
         })
         
         this.manager.onProgress = (items, loaded, total) => {
@@ -120,9 +124,13 @@ export default class RoomScene {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         // Simulate sunlight
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
-        hemiLight.position.set(0, 300, 0)
+        hemiLight.position.set(0, 200, 0)
         this.scene.add(hemiLight)
 
+    }
+
+    renderScene = () => {
+        this.renderer.render(this.scene, this.camera)
     }
 
     renderRoom = () => {
@@ -150,7 +158,8 @@ export default class RoomScene {
             }
             this.scannerLockMesh.rotation.z -= 0.01
         }
-        this.renderer.render(this.scene, this.camera)
+
+        this.renderScene()
     }
 
     resizeRenderer = () => {
