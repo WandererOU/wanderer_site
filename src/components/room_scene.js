@@ -58,10 +58,9 @@ export default class RoomScene {
             let aboutGeometry = new THREE.PlaneBufferGeometry(2.0, 2.0)
             let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
             this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
-            this.aboutMesh.position.set(3.2, -0.4, -7.35)
+            this.aboutMesh.position.set(2.73, -0.4, -3.35)
             this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
             this.scene.add(this.aboutMesh)
-            console.log(Date.now() - this.startTime + ' Loaded about mesh to scene.')
         })
 
         this.textureLoader.load('/images/email-graffiti.png', (image) => {
@@ -75,10 +74,10 @@ export default class RoomScene {
             // document.body.appendChild(mailContainer)
             // document.getElementById('email-container').appendChild(mailInput)
 
-            let contactGeometry = new THREE.PlaneBufferGeometry(1.8, 0.38)
+            let contactGeometry = new THREE.PlaneBufferGeometry(1.6, 0.34)
             let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
             this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
-            this.contactMesh.position.set(2.73, 0.2, -12.1)
+            this.contactMesh.position.set(2.73, 0.37, -12.05)
             this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
             this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.15)
             this.scene.add(this.contactMesh)
@@ -90,7 +89,7 @@ export default class RoomScene {
             let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
             let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
             this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
-            this.mindArchiveMesh.position.set(-3.05, 0, -5.55)
+            this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
             this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
             this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
             this.scene.add(this.mindArchiveMesh)
@@ -98,6 +97,8 @@ export default class RoomScene {
 
         this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
             let tunnel = object.scene.children[0]
+            
+            tunnel.material = new THREE.MeshNormalMaterial()
             tunnel.position.set(-0.4, -1.7, -11)
             tunnel.rotateX(-Math.PI / 2)
             tunnel.rotateY(-Math.PI / 2)
@@ -126,7 +127,6 @@ export default class RoomScene {
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
         hemiLight.position.set(0, 200, 0)
         this.scene.add(hemiLight)
-
     }
 
     renderScene = () => {
