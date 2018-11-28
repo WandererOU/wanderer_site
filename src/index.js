@@ -21,6 +21,7 @@ class Root {
                   'i')
 
         if (testExp.test(navigator.userAgent)) {
+            window.isMobile = true
             window.addEventListener('devicemotion', this.roomSceneObj.handleMobileMotion)
         
             document.addEventListener('touchend', (event) => {

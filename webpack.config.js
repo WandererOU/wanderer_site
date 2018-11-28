@@ -14,7 +14,7 @@ module.exports = {
         beautify: false,
         ecma: 6,
         compress: true,
-        comments: false
+        warnings: false
       }
     }),
     new CopyWebpackPlugin([
