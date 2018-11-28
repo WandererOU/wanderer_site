@@ -80,7 +80,7 @@ export const menuCoordinates = {
     },
     contacts: {
         position: {
-            x: 0,
+            x: 1.0,
             y: 0,
             z: -12
         },
@@ -119,7 +119,7 @@ export const menuCoordinatesMobile = {
     },
     apps: {
         position: {
-            x: 0.5,
+            x: -1.0,
             y: 0,
             z: -5.5
         },
@@ -131,7 +131,7 @@ export const menuCoordinatesMobile = {
     },
     blog: {
         position: {
-            x: 0.5,
+            x: -1.0,
             y: 0,
             z: -16.5
         },
