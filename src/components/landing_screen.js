@@ -18,7 +18,7 @@ export default class LandingPage {
 
         // layout sections
         this.topContainer = el('.top-container')
-        this.midContainer = el('.mid-container')
+        this.midContainer = el('#mid-container.mid-container')
 
         // layout components
         this.logo = el('img#initial', {src: '/images/plain_white.png', alt: 'Wanderer Studio Logo'})
