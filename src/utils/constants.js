@@ -92,7 +92,6 @@ export const menuCoordinates = {
     }
 }
 
-
 export const menuCoordinatesMobile = {
     initial: {
         position: {
@@ -108,7 +107,7 @@ export const menuCoordinatesMobile = {
     },
     about: {
         position: {
-            x: 1.0,
+            x: 0.5,
             y: 0,
             z: -3.37
         },
@@ -120,7 +119,7 @@ export const menuCoordinatesMobile = {
     },
     apps: {
         position: {
-            x: -1.0,
+            x: 0.5,
             y: 0,
             z: -5.5
         },
@@ -132,7 +131,7 @@ export const menuCoordinatesMobile = {
     },
     blog: {
         position: {
-            x: -1.0,
+            x: 0.5,
             y: 0,
             z: -16.5
         },
@@ -144,7 +143,7 @@ export const menuCoordinatesMobile = {
     },
     contacts: {
         position: {
-            x: 0,
+            x: 0.5,
             y: 0,
             z: -12
         },
