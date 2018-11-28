@@ -233,7 +233,7 @@ export default class RoomScene {
 
         this.isMovingCamera = true
         this.activeMenu = menu
-        let coordinates = constants.menuCoordinates[menu]
+        let coordinates = window.isMobile ? constants.menuCoordinatesMobile[menu] : constants.menuCoordinates[menu]
         let position = coordinates.position
         let rotation = coordinates.rotation
     
