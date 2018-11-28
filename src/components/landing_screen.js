@@ -23,7 +23,7 @@ export default class LandingPage {
         // layout components
         this.logo = el('img#initial', {src: '/images/plain_white.png', alt: 'Wanderer Studio Logo'})
         this.hamburgerMenu = el('#hamburger-menu.hamburger-menu', [
-            el('input#hamburger-menu-checkbot', {type: 'checkbox', checked: false}),
+            el('input#hamburger-menu-checkbox', {type: 'checkbox', checked: false}),
             el('span'),
             el('span'),
             el('span'),
@@ -164,6 +164,4 @@ export default class LandingPage {
     closeAppInformation = () => {
         setChildren(this.midContainer, [this.menuContainer])
     }
-
-
 }
