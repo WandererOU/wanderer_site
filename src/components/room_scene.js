@@ -19,6 +19,7 @@ export default class RoomScene {
         // Scene components
         this.scene = new THREE.Scene()
         this.renderer = new THREE.WebGLRenderer()
+        this.renderer.setPixelRatio(window.devicePixelRatio)
         this.el = this.renderer.domElement
 
         // Loaders
@@ -30,7 +31,7 @@ export default class RoomScene {
         // Camera setup
         this.isMovingCamera = true
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 500)
+        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 500)
         this.cameraContainer.position.set(0, 0, -1)
         this.cameraContainer.add(this.camera)
         this.scene.add(this.cameraContainer)
