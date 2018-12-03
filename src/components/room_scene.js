@@ -1,8 +1,5 @@
-var THREE = require('three')
-var OBJLoader = require('three-obj-loader')
-var MTLLoader = require('three-mtl-loader')
-OBJLoader(THREE)
-
+import * as THREE from 'three'
+import GLTFLoader from 'three-gltf-loader'
 import {TweenLite, Power1} from 'gsap'
 import LoadingScreen from './loading_screen'
 import LandingPage from './landing_screen'
@@ -12,7 +9,7 @@ import {mount, unmount} from 'redom'
 export default class RoomScene {
     constructor() {
         this.activeMenu = constants.INITIAL
-        
+
         // HTML pages
         this.loadingScreen = new LoadingScreen()
         this.landingPage = new LandingPage()
@@ -21,14 +18,13 @@ export default class RoomScene {
         
         // Scene components
         this.scene = new THREE.Scene()
-        this.renderer = new THREE.WebGLRenderer()
+        this.renderer = new THREE.WebGLRenderer({precision: 'lowp'})
         this.el = this.renderer.domElement
 
         // Loaders
         this.manager = new THREE.LoadingManager()
-        this.objectLoader = new THREE.OBJLoader(this.manager)
         this.fontLoader = new THREE.FontLoader(this.manager)
-        this.mtlLoader = new MTLLoader(this.manager)
+        this.gltfLoader = new GLTFLoader(this.manager)
         this.textureLoader = new THREE.TextureLoader(this.manager)
         
         // Camera setup
@@ -59,10 +55,10 @@ export default class RoomScene {
         this.textureLoader.load('/images/about_text.png', (image) => {
             this.aboutImage = image
 
-            let aboutGeometry = new THREE.PlaneGeometry(2.0, 2.0)
+            let aboutGeometry = new THREE.PlaneBufferGeometry(2.0, 2.0)
             let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
             this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
-            this.aboutMesh.position.set(3.2, -0.4, -7.35)
+            this.aboutMesh.position.set(2.73, -0.4, -3.35)
             this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
             this.scene.add(this.aboutMesh)
         })
@@ -75,13 +71,13 @@ export default class RoomScene {
             // let mailInput = document.createElement('input')
             // mailInput.id = 'email-input'
             // mailInput.value = 'info@wanderer.studio'
-
             // document.body.appendChild(mailContainer)
             // document.getElementById('email-container').appendChild(mailInput)
-            let contactGeometry = new THREE.PlaneGeometry(1.8, 0.38)
+
+            let contactGeometry = new THREE.PlaneBufferGeometry(1.6, 0.34)
             let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
             this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
-            this.contactMesh.position.set(2.73, 0.2, -12.1)
+            this.contactMesh.position.set(2.73, 0.37, -12.05)
             this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
             this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.15)
             this.scene.add(this.contactMesh)
@@ -93,23 +89,21 @@ export default class RoomScene {
             let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
             let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
             this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
-            this.mindArchiveMesh.position.set(-3.05, 0, -5.55)
+            this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
             this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
             this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
             this.scene.add(this.mindArchiveMesh)
         })
 
-        this.mtlLoader.setPath('/scenes/room/')
-        this.mtlLoader.setTexturePath('/scenes/room/')
-        this.mtlLoader.load('CONVICT_TUNNEL.mtl', (materials) => { 
-            materials.preload()
-            this.objectLoader.setPath('/scenes/room/')
-            this.objectLoader.setMaterials(materials)
-
-            this.objectLoader.load('CONVICT_TUNNEL.obj', (object) => { 
-                this.roomObject = object
-                this.renderRoom()
-            })
+        this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
+            let tunnel = object.scene.children[0]
+            
+            tunnel.material = new THREE.MeshNormalMaterial()
+            tunnel.position.set(-0.4, -1.7, -11)
+            tunnel.rotateX(-Math.PI / 2)
+            tunnel.rotateY(-Math.PI / 2)
+            tunnel.rotateZ(-Math.PI / 2)
+            this.scene.add(tunnel)
         })
         
         this.manager.onProgress = (items, loaded, total) => {
@@ -131,13 +125,15 @@ export default class RoomScene {
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         // Simulate sunlight
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
-        hemiLight.position.set(0, 400, 0)
+        hemiLight.position.set(0, 200, 0)
         this.scene.add(hemiLight)
+    }
 
+    renderScene = () => {
+        this.renderer.render(this.scene, this.camera)
     }
 
     renderRoom = () => {
-        this.roomObject.scale.set(0.0065541567816092, 0.0065541567816092, 0.0065541567816092);
         this.roomObject.position.set(-0.4, -1.7, -11)
         this.roomObject.rotateX(-Math.PI / 2)
         this.roomObject.rotateY(-Math.PI / 2)
@@ -162,7 +158,8 @@ export default class RoomScene {
             }
             this.scannerLockMesh.rotation.z -= 0.01
         }
-        this.renderer.render(this.scene, this.camera)
+
+        this.renderScene()
     }
 
     resizeRenderer = () => {
