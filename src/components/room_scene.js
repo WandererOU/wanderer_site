@@ -18,8 +18,7 @@ export default class RoomScene {
         
         // Scene components
         this.scene = new THREE.Scene()
-        this.renderer = new THREE.WebGLRenderer()
-        this.renderer.setPixelRatio(window.devicePixelRatio)
+        this.renderer = new THREE.WebGLRenderer({precision: 'lowp', preserveDrawingBuffer: true })
         this.el = this.renderer.domElement
 
         // Loaders
@@ -57,7 +56,7 @@ export default class RoomScene {
             this.aboutImage = image
 
             let aboutGeometry = new THREE.PlaneBufferGeometry(2.0, 2.0)
-            let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
+            let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0xFFFFFF})
             this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
             this.aboutMesh.position.set(2.73, -0.3, -3.35)
             this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
@@ -97,9 +96,19 @@ export default class RoomScene {
         })
 
         this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
-            let tunnel = object.scene.children[0]
+            let tunnel = object.scene
             
-            tunnel.material = new THREE.MeshNormalMaterial()
+            for (let i = 0; i < tunnel.children.length; i++) {
+                let child = tunnel.children[i]
+                
+                if (constants.shouldRenderMaterial.indexOf(i) > -1) {
+                    let tempMaterial = new THREE.MeshBasicMaterial({map: child.material.map, color: 0xFFFFFF})
+                    child.material = tempMaterial
+                } else {
+                    child.material = new THREE.MeshBasicMaterial({color: 0x000000, transparent: true, opacity: 0.9})
+                }
+            }
+
             tunnel.position.set(-0.4, -1.7, -11)
             tunnel.rotateX(-Math.PI / 2)
             tunnel.rotateY(-Math.PI / 2)
@@ -132,7 +141,7 @@ export default class RoomScene {
     }
 
     renderScene = () => {
-        this.renderer.render(this.scene, this.camera)
+        this.renderer.render(this.scene, this.camera, null, false)
     }
 
     renderRoom = () => {
@@ -160,7 +169,6 @@ export default class RoomScene {
             }
             this.scannerLockMesh.rotation.z -= 0.01
         }
-
         this.renderScene()
     }
 
