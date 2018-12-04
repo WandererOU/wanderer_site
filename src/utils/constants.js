@@ -20,6 +20,12 @@ export const apps = {
         description: 'Mind Archive is an application that allows you to create your own mind palace and store information in real space in an easy and intuitive manner.',
         isReleased: false,
         link: '',
+    },
+    menuScanner: {
+        title: 'Menu Scanner',
+        description: 'Menu Scanner allows you to use your phone\'s camera to search for a dish\'s information and view it in 3D',
+        isReleased: false,
+        link: ''
     }
 }
 
@@ -50,7 +56,7 @@ export const menuCoordinates = {
     },
     apps: {
         position: {
-            x: -1.5,
+            x: -1.0,
             y: 0,
             z: -5.5
         },
@@ -62,7 +68,7 @@ export const menuCoordinates = {
     },
     blog: {
         position: {
-            x: -1.5,
+            x: -1.0,
             y: 0,
             z: -16.5
         },
@@ -74,7 +80,70 @@ export const menuCoordinates = {
     },
     contacts: {
         position: {
-            x: 1.2,
+            x: 1.0,
+            y: 0,
+            z: -12
+        },
+        rotation: {
+            x: 0,
+            y: -Math.PI / 2,
+            z: 0
+        }
+    }
+}
+
+export const menuCoordinatesMobile = {
+    initial: {
+        position: {
+            x: 0,
+            y: 0,
+            z: -1
+        },
+        rotation: {
+            x: 0,
+            y: 0,
+            z: 0
+        }
+    },
+    about: {
+        position: {
+            x: 0.5,
+            y: 0,
+            z: -3.37
+        },
+        rotation: {
+            x: 0,
+            y: -Math.PI / 2,
+            z: 0
+        }
+    },
+    apps: {
+        position: {
+            x: -1.0,
+            y: 0,
+            z: -5.5
+        },
+        rotation: {
+            x: 0,
+            y: Math.PI / 2,
+            z: 0
+        }
+    },
+    blog: {
+        position: {
+            x: -1.0,
+            y: 0,
+            z: -16.5
+        },
+        rotation: {
+            x: 0,
+            y: Math.PI / 2,
+            z: 0
+        }
+    },
+    contacts: {
+        position: {
+            x: 0.5,
             y: 0,
             z: -12
         },

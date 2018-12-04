@@ -21,6 +21,7 @@ class Root {
                   'i')
 
         if (testExp.test(navigator.userAgent)) {
+            window.isMobile = true
             window.addEventListener('devicemotion', this.roomSceneObj.handleMobileMotion)
         
             document.addEventListener('touchend', (event) => {
@@ -49,7 +50,6 @@ class Root {
 
     handleClickAndTap = (event) => {
         const targetId = event.target.id
-        
         if(targetId.includes(constants.ABOUT)) {
             this.roomSceneObj.moveCamera(constants.ABOUT)
         } else if (targetId.includes(constants.APPS)) {
@@ -60,7 +60,7 @@ class Root {
             this.roomSceneObj.moveCamera(constants.CONTACTS)
         } else if (targetId.includes(constants.INITIAL)) {
             this.roomSceneObj.moveCamera(constants.INITIAL)
-        } else if (targetId.length === 0) {
+        } else if (targetId === 'mid-container') { // tapped "inside canvas"
             this.roomSceneObj.handleClick()
         }
     }

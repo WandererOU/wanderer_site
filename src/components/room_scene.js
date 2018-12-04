@@ -18,7 +18,8 @@ export default class RoomScene {
         
         // Scene components
         this.scene = new THREE.Scene()
-        this.renderer = new THREE.WebGLRenderer({precision: 'lowp'})
+        this.renderer = new THREE.WebGLRenderer()
+        this.renderer.setPixelRatio(window.devicePixelRatio)
         this.el = this.renderer.domElement
 
         // Loaders
@@ -30,7 +31,7 @@ export default class RoomScene {
         // Camera setup
         this.isMovingCamera = true
         this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
+        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 500)
         this.cameraContainer.position.set(0, 0, -1)
         this.cameraContainer.add(this.camera)
         this.scene.add(this.cameraContainer)
@@ -58,7 +59,7 @@ export default class RoomScene {
             let aboutGeometry = new THREE.PlaneBufferGeometry(2.0, 2.0)
             let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0x0})
             this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
-            this.aboutMesh.position.set(2.73, -0.4, -3.35)
+            this.aboutMesh.position.set(2.73, -0.3, -3.35)
             this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
             this.scene.add(this.aboutMesh)
         })
@@ -123,6 +124,7 @@ export default class RoomScene {
     createScene = () => {
         this.scene.background = new THREE.Color( 0xffffff )
         this.renderer.setSize(window.innerWidth, window.innerHeight)
+        this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
         // Simulate sunlight
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
         hemiLight.position.set(0, 200, 0)
@@ -233,7 +235,7 @@ export default class RoomScene {
 
         this.isMovingCamera = true
         this.activeMenu = menu
-        let coordinates = constants.menuCoordinates[menu]
+        let coordinates = window.isMobile ? constants.menuCoordinatesMobile[menu] : constants.menuCoordinates[menu]
         let position = coordinates.position
         let rotation = coordinates.rotation
     
