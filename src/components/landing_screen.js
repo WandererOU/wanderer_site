@@ -119,11 +119,15 @@ export default class LandingPage {
 
     selectActiveMenu = (menu) => {
         this.activeMenu = menu
-
         // Only trigger on small screens and when menu isn't initial
-        if(menu !== constants.INITIAL && window.innerWidth < 1150) {
-            this.toggleNavigation()
+        if(window.isMobile || window.innerWidth < 1150) {
+            this.closeNavigation()
         }
+    }
+
+    closeNavigation = () => {
+        this.hamburgerMenu.children[0].attributes.type.ownerElement.checked = false
+        TweenLite.to(this.menuContainer.style, 0.5, {height: '0px', ease: Power3.easeOut}) 
     }
 
     toggleNavigation = () => {

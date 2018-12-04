@@ -41,6 +41,7 @@
     "node-sass": "^4.9.3",
     "redom": "^3.12.7",
     "three": "^0.95.0",
+    "three-device-orientation": "^1.0.3",
     "three-gltf-loader": "^1.96.0"
   }
 }

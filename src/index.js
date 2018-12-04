@@ -5,6 +5,13 @@ import './sass/style.scss'
 
 class Root {
     constructor() {
+        const testExp = new RegExp('Android|webOS|iPhone|iPad|' +
+    		       'BlackBerry|Windows Phone|'  +
+    		       'Opera Mini|IEMobile|Mobile' , 
+                  'i')
+        if (testExp.test(navigator.userAgent)) {
+            window.isMobile = true
+        }
         this.roomSceneObj = new RoomScene()
         this.el = el('#main-div')
     }
@@ -15,15 +22,7 @@ class Root {
     }
 
     registerEventListeners = () => {
-        const testExp = new RegExp('Android|webOS|iPhone|iPad|' +
-    		       'BlackBerry|Windows Phone|'  +
-    		       'Opera Mini|IEMobile|Mobile' , 
-                  'i')
-
-        if (testExp.test(navigator.userAgent)) {
-            window.isMobile = true
-            window.addEventListener('devicemotion', this.roomSceneObj.handleMobileMotion)
-        
+        if (window.isMobile) {
             document.addEventListener('touchend', (event) => {
                 this.handleClickAndTap(event)
             })

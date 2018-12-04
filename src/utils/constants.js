@@ -21,9 +21,9 @@ export const apps = {
         isReleased: false,
         link: '',
     },
-    menuScanner: {
-        title: 'Menu Scanner',
-        description: 'Menu Scanner allows you to use your phone\'s camera to search for a dish\'s information and view it in 3D',
+    menuScanr: {
+        title: 'Menu Scanr',
+        description: 'Menu Scanr allows you to use your phone\'s camera to search for a dish\'s information and view it in 3D',
         isReleased: false,
         link: ''
     }
