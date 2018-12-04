@@ -1,4 +1,13 @@
 @import 'colors';
+$bp-small: 48em; // 768px
+$bp-medium: 64em; // 1024px
+$bp-large: 85.375em; // 1366px
+$bp-xlarge: 120em; // 1920px
+$bp-xxlarge: 160em; // 2560px
+
+$mq-small: "(max-width: #{$bp-small})";
+$mq-medium: "(max-width: #{$bp-medium})";
+$mq-large: "(min-width: #{$bp-large})";
 
 .overlay {
     position: absolute;
@@ -49,6 +58,10 @@
     height: 30px;
     float: right;
     margin: 20px;
+
+    @media #{$mq-medium} {
+        display: initial;
+    }
 
     input {
         display: block;
@@ -109,16 +122,24 @@
     flex-direction: row;
     padding: 60px;
 
+    @media #{$mq-medium} {
+        padding: 30px;
+    }
     .title-container {
         width: fit-content;
         flex-wrap: wrap;
         display: flex;
         flex-direction: column;
         
+        @media #{$mq-medium} {
+            margin: 0 auto;
+        }
+
         .title {
             width: inherit;
             overflow: hidden;
             padding-bottom: 20px;
+            
             
             h1 {
                 position: relative;
@@ -127,6 +148,10 @@
                 color: $lightViolet;
                 text-align: left;
                 margin: 0px;
+     
+                @media #{$mq-small} {
+                    font-size: 10vw;
+                }
             }
         }
         
@@ -151,6 +176,10 @@
                 text-align: left;
                 margin: 0;
 
+                @media #{$mq-small} {
+                    font-size: 4.2vw;
+                }
+
                 strong {
                     font-family: 'Poppins-SemiBold', sans-serif;
                     border-bottom: 4px solid #735da8;
@@ -160,15 +189,31 @@
     }
 
     .menu-container {
-        width: 25rem;
+        width: 21rem;
         position: fixed;
         right: 15px;
         align-self: center;
     
+        @media #{$mq-large} {
+            width: 25rem;
+        }
+
+        @media #{$mq-medium} {
+            width: 100%;
+            right: 0;
+            height: 0px;
+            overflow: hidden;
+            background: rgba(18, 24, 26, 0.95);
+            top: 0;
+            margin-top: 70px;
+            color: $white;
+        }
+
         p {
             font-size: 2.5rem;
             line-height: 3.5rem;
             font-family: 'Poppins-ExtraLight', sans-serif;
+            color: $white;
             cursor: pointer;
             padding: 15px;
             /* overriding user agent stylesheet */
@@ -177,9 +222,9 @@
             -webkit-margin-after: 0px !important;
             margin-block-end: 0px !important;
     
-            &.initial {
-                color: $white !important;
-            }
+            // &.initial {
+            //     color: $white !important;
+            // }
             
             &.selected {
                 font-family: 'Poppins-SemiBold', sans-serif !important;
@@ -199,16 +244,28 @@
         flex-direction: column;
         max-width: 40%;
         
+        @media #{$mq-small} {
+            max-width: 100%;
+        }
+
         .app-details-modal {
             background-color: $overlayBg;
             padding: 50px;
     
+            @media #{$mq-small} {
+                padding: 20px;
+            }
+
             #app-details-title-container {
                 width: 100%;
                 color: $selectiveYellow;
                 font-family: 'Montserrat-Black', sans-serif;
                 font-size: 2.3rem;
             
+                @media #{$mq-small} {
+                    font-size: 8vw;
+                }
+
                 h2 {
                     margin: 0;
                 }
@@ -220,6 +277,10 @@
                 color: $white;
                 font-size: 1.6rem;
                 font-family: 'Poppins-ExtraLight', sans-serif;
+
+                @media #{$mq-small} {
+                    font-size: 4.2vw;
+                }
             }
             
             #app-details-button-container {
@@ -233,6 +294,11 @@
                     font-size: 1.6rem;
                     background-color: $darkGray;
                     width: fit-content;
+
+                    @media #{$mq-small} {
+                        font-size: 4.5vw;
+                        padding: 10px;
+                    }
                 }
             }
         }
@@ -268,58 +334,3 @@
         right: -50px;
     }
 }
-
-/* On smaller devices (tablets and mobiles) */
-@media only screen and (max-width: 1150px) {
-    #app-details {
-        max-width: 100% !important;
-
-        .app-details-modal {
-            padding: 20px !important;
-
-            #app-details-title-container {
-                font-size: 8vw !important
-            }
-            #app-details-paragraph-container {
-                font-size: 4.2vw !important;
-            }
-            #app-details-button-container {
-                div {
-                    font-size: 4.5vw !important;
-                    padding: 10px !important;
-                }
-            }
-        }
-    }
-
-    .title-container {
-        margin: 0 auto;
-
-        .title > h1 {
-            font-size: 10vw !important;
-        }
-
-        .subtitle > h2 {
-            font-size: 4.2vw !important;
-        }
-    }
-
-    .menu-container {
-        width: 100% !important;
-        right: 0 !important;
-        height: 0px;
-        overflow: hidden;
-        background: rgba(18, 24, 26, 0.95);
-        top: 0;
-        margin-top: 70px;
-        color: $white !important;
-    }
-
-    .hamburger-menu {
-        display: initial;
-    }
-    
-    .mid-container {
-        padding: 30px;
-    }
-} 

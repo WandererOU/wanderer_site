@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import DeviceOrientationControls from 'three-device-orientation'
 import GLTFLoader from 'three-gltf-loader'
 import {TweenLite, Power1} from 'gsap'
 import LoadingScreen from './loading_screen'
@@ -15,7 +16,6 @@ export default class RoomScene {
         this.landingPage = new LandingPage()
         mount(document.body, this.loadingScreen)
         mount(document.body, this.landingPage)
-        
         // Scene components
         this.scene = new THREE.Scene()
         this.renderer = new THREE.WebGLRenderer()
@@ -30,11 +30,15 @@ export default class RoomScene {
         
         // Camera setup
         this.isMovingCamera = true
-        this.cameraContainer = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), new THREE.MeshBasicMaterial()) 
-        this.camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 500)
-        this.cameraContainer.position.set(0, 0, -1)
-        this.cameraContainer.add(this.camera)
-        this.scene.add(this.cameraContainer)
+        this.rig =  new THREE.Object3D();
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 400);
+
+        if (window.isMobile) {
+            this.controls = new DeviceOrientationControls(this.camera)
+        }
+        this.rig.position.set(0, 0, -1)
+        this.rig.add(this.camera)
+        this.scene.add(this.rig)
 
         // Set up scene
         this.createScene()
@@ -84,16 +88,16 @@ export default class RoomScene {
             this.scene.add(this.contactMesh)
         })
 
-        this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
-            this.mindArchivePoster = image
+        this.textureLoader.load('/images/menu_scanr_poster.png', (image) => {
+            this.menuScanrPoster = image
 
-            let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
-            let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
-            this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
-            this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
-            this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
-            this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
-            this.scene.add(this.mindArchiveMesh)
+            let menuScanrGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
+            let menuScanrMaterial = new THREE.MeshBasicMaterial({map: this.menuScanrPoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
+            this.menuScanrMesh = new THREE.Mesh(menuScanrGeometry, menuScanrMaterial)
+            this.menuScanrMesh.position.set(-3.05, 0, -5.6)
+            this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
+            this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
+            this.scene.add(this.menuScanrMesh)
         })
 
         this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
@@ -170,6 +174,13 @@ export default class RoomScene {
             }
             this.scannerLockMesh.rotation.z -= 0.01
         }
+
+        if (this.controls) {
+            // hover effect on objects
+            this.detectObjects(window.innerWidth / 2, window.innerHeight / 2)
+            this.controls.update()
+        }
+
         this.renderScene()
     }
 
@@ -190,8 +201,6 @@ export default class RoomScene {
         let deltax = (-window.innerWidth / 2) + x
         let rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {x: -deltaY * sensitivity, y: -deltax * sensitivity, z: 0, ease: Power1.easeOut})
         this.renderer.render(this.scene, this.camera)
-
-        // hover effect on objects
         this.detectObjects(x, y)
     }
 
@@ -202,7 +211,7 @@ export default class RoomScene {
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
-        var intersects = ray.intersectObjects([this.mindArchiveMesh, this.devBadge], true)
+        var intersects = ray.intersectObjects([this.menuScanrMesh, this.devBadge], true)
 
         if(intersects.length > 0) {
             this.intersectedObject = intersects[0].object
@@ -239,6 +248,11 @@ export default class RoomScene {
     }
 
     moveCamera = (menu) => {
+        // prevents new animation if previous one hasn't finished yet
+        if(this.isMovingCamera) {
+            return
+        }
+
         this.landingPage.selectActiveMenu(menu)
         mount(document.body, this.landingPage)
 
@@ -248,8 +262,9 @@ export default class RoomScene {
         let position = coordinates.position
         let rotation = coordinates.rotation
     
-        let posAnimation = TweenLite.to(this.cameraContainer.position, 2, {x: position.x, y: position.y, z: position.z})
-        let rotAnimation = TweenLite.to(this.cameraContainer.rotation, 2, {x: rotation.x, y: rotation.y, z: rotation.z})
+        let posAnimation = TweenLite.to(this.rig.position, 1.4, {x: position.x, y: position.y, z: position.z})
+        let rotAnimation1 = TweenLite.to(this.rig.rotation, 1.4, {x: rotation.x, y: rotation.y, z: rotation.z})
+        let rotAnimation2 = TweenLite.to(this.camera.rotation, 1.4, {x: 0, y: 0, z: 0})
 
         posAnimation.eventCallback('onComplete', () => {
             this.intersectedObject = null
@@ -258,26 +273,9 @@ export default class RoomScene {
         })
     }
 
-    handleMobileMotion = () => {
-        // Preventing camera rotation from being triggered twice
-        if(this.isMovingCamera) return
-
-        const sensitivity = 0.00003
-        const x = event.rotationRate.alpha * sensitivity
-        const y = event.rotationRate.beta * sensitivity
-
-        const deltaX = this.cameraContainer.rotation.x += x
-        const deltaY = this.camera.rotation.y += y
-
-        this.camera.rotation.set(deltaX, deltaY, 0)
-        this.renderer.render(this.scene, this.camera)
-        // detect center of screen to scan surfaces
-        this.detectObjects(window.innerWidth / 2, window.innerHeight / 2)
-    }
-
     handleClick = () => {
-        if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
-            this.landingPage.renderAppInformation('mindArchive')
+        if(this.intersectedObject && this.intersectedObject.uuid === this.menuScanrMesh.uuid) {
+            this.landingPage.renderAppInformation('menuScanr')
             let rotation = this.scannerLockMesh.rotation.z
             this.removeScannerLock()
             this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation)
