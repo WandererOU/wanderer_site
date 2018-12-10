@@ -36,7 +36,7 @@ export default class RoomScene {
         if (window.isMobile) {
             this.controls = new DeviceOrientationControls(this.camera)
         }
-        this.rig.position.set(0, 0, -1)
+        this.rig.position.set(0, 0, -1.5)
         this.rig.add(this.camera)
         this.scene.add(this.rig)
 
@@ -44,6 +44,32 @@ export default class RoomScene {
         this.createScene()
         this.fontLoader.load('/fonts/Poppins_SemiBold.json', (font) => {
             this.standardFont = font
+
+            // Add "Welcome" message
+            var textMaterial = new THREE.MeshBasicMaterial({color: 0x0}) 
+            var welcomeGeometry = new THREE.TextBufferGeometry(constants.welcome, { 
+                font: this.standardFont, 
+                size: 0.34, 
+                curveSegments: 20, 
+                height: 0.01 
+            }) 
+            var welcomeMesh = new THREE.Mesh(welcomeGeometry, textMaterial) 
+            welcomeMesh.position.set(1.5, 0, 1.0) 
+            welcomeMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI) 
+            this.scene.add(welcomeMesh)
+
+            // Adds "Look up" message below start point
+            var lookUpMaterial = new THREE.MeshBasicMaterial({color: 0xffffff}) 
+            var lookUpGeometry = new THREE.TextBufferGeometry("Look up", { 
+                font: this.standardFont, 
+                size: 0.06, 
+                curveSegments: 20, 
+                height: 0.001
+            }) 
+            var lookUpMesh = new THREE.Mesh(lookUpGeometry, lookUpMaterial) 
+            lookUpMesh.position.set(-0.135, -0.9, -1.95) 
+            lookUpMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -Math.PI / 2) 
+            this.scene.add(lookUpMesh)
         })
 
         this.textureLoader.load('/images/dev-badge.png', (image) => {
@@ -105,7 +131,6 @@ export default class RoomScene {
             
             for (let i = 0; i < tunnel.children.length; i++) {
                 let child = tunnel.children[i]
-                
                 if (constants.shouldRenderMaterial.indexOf(i) > -1) {
                     let tempMaterial = new THREE.MeshBasicMaterial({map: child.material.map, color: 0xFFFFFF})
                     child.material = tempMaterial
@@ -143,6 +168,13 @@ export default class RoomScene {
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
         hemiLight.position.set(0, 200, 0)
         this.scene.add(hemiLight)
+
+        // Add block below user so that scene won't look weird when looking down on mobile
+        let block = new THREE.CubeGeometry(1.3, 0.1, 1);
+        let blockMaterial = new THREE.MeshBasicMaterial({color: 0x0})
+        let blockMesh = new THREE.Mesh(block, blockMaterial)
+        blockMesh.position.set(0, -1.9, -1.75)
+        this.scene.add(blockMesh)
     }
 
     renderScene = () => {
@@ -263,9 +295,9 @@ export default class RoomScene {
         let rotation = coordinates.rotation
     
         let posAnimation = TweenLite.to(this.rig.position, 1.4, {x: position.x, y: position.y, z: position.z})
-        let rotAnimation1 = TweenLite.to(this.rig.rotation, 1.4, {x: rotation.x, y: rotation.y, z: rotation.z})
-        let rotAnimation2 = TweenLite.to(this.camera.rotation, 1.4, {x: 0, y: 0, z: 0})
-
+        let rigAnimation = TweenLite.to(this.rig.rotation, 1.4, {x: rotation.x, y: rotation.y, z: rotation.z})
+        let cameraAnimation = TweenLite.to(this.camera.rotation, 1.4, {x: 0, y: 0, z: 0})
+        
         posAnimation.eventCallback('onComplete', () => {
             this.intersectedObject = null
             this.removeScannerLock()
