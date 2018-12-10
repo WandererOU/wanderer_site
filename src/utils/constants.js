@@ -3,15 +3,9 @@ export const ABOUT = 'about'
 export const APPS = 'apps'
 export const BLOG = 'blog'
 export const CONTACTS = 'contacts'
-export const aboutContents = [
-    'We are a company launched with the',
-    'objective of exploring the latest',
-    'advancements in AR technology.\n',
-    'And ensuring that there are useful',
-    'applicabilities for every-day life where AR',
-    'can truly allow humankind to thrive.\n',
-    'Our mission is to expand the boundaries',
-    'of human capacity beyond the physical realm.'
+export const welcome = [
+    'Welcome to',
+    'Wånderer Studio',
 ].join('\n')
 
 export const apps = {
@@ -33,19 +27,45 @@ export const apps = {
 // indexes that shouldn't be displayed (performance issues)
 // have been commented out
 export const shouldRenderMaterial = [
-    0, 1, 2, 3, 4, 5, 
-    6, 7, 8, /*9,*/ /*10,*/
-    /*11,*/ 12, 13, 14, /*15,*/
-    16, 17, /*18*/, 19, /*20*/,
-    21, 22, /*23, 24, 25,*/
-    26, 27, 28, /*29, 30*/
+    0, // 13
+    1, // 04
+    2, // 01
+    3, // 28
+    4, // 22
+    5, // 21
+    6, // 16
+    7, // 18
+    8,  //23
+    // 9, // 00
+    // 10, // 09
+    // 11, // 17
+    12, // 02
+    13, // 15
+    14, // 05
+    // 15, // 08
+    16, // 19
+    17, // 06
+    // 18, // 30
+    19, // 10
+    // 20, // 07
+    21, // 24
+    22, // 12
+    // 23, // 29
+    // 24, // 14
+    // 25, // 12
+    26, // 25
+    27, // 03
+    28, // 26
+    // 29, // 11
+    // 30, // 20
+    31 // 27
 ]
 export const menuCoordinates = {
     initial: {
         position: {
             x: 0,
             y: 0,
-            z: -1
+            z: -1.5
         },
         rotation: {
             x: 0,
@@ -108,7 +128,7 @@ export const menuCoordinatesMobile = {
         position: {
             x: 0,
             y: 0,
-            z: -1
+            z: -1.5
         },
         rotation: {
             x: 0,
