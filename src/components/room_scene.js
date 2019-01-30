@@ -46,7 +46,7 @@ export default class RoomScene {
             this.standardFont = font
 
             // Add "Welcome" message
-            var textMaterial = new THREE.MeshBasicMaterial({color: 0x0}) 
+            var textMaterial = new THREE.MeshBasicMaterial({color: 0x000000}) 
             var welcomeGeometry = new THREE.TextBufferGeometry(constants.welcome, { 
                 font: this.standardFont, 
                 size: 0.34, 
@@ -59,7 +59,7 @@ export default class RoomScene {
             this.scene.add(welcomeMesh)
 
             // Adds "Look up" message below start point
-            var lookUpMaterial = new THREE.MeshBasicMaterial({color: 0xffffff}) 
+            var lookUpMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF}) 
             var lookUpGeometry = new THREE.TextBufferGeometry("Look up", { 
                 font: this.standardFont, 
                 size: 0.06, 
@@ -83,6 +83,7 @@ export default class RoomScene {
             this.scene.add(this.devBadge)
         })
 
+        //TODO: Replace about text with introduction that includes "Mixed Reality" keywords (Affinity Designer)
         this.textureLoader.load('/images/about_text.png', (image) => {
             this.aboutImage = image
 
@@ -97,14 +98,6 @@ export default class RoomScene {
         this.textureLoader.load('/images/email-graffiti.png', (image) => {
             this.contactsImage = image
 
-            // let mailContainer = document.createElement('div')
-            // mailContainer.id = 'email-container'
-            // let mailInput = document.createElement('input')
-            // mailInput.id = 'email-input'
-            // mailInput.value = 'info@wanderer.studio'
-            // document.body.appendChild(mailContainer)
-            // document.getElementById('email-container').appendChild(mailInput)
-
             let contactGeometry = new THREE.PlaneBufferGeometry(1.6, 0.34)
             let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
             this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
@@ -114,16 +107,28 @@ export default class RoomScene {
             this.scene.add(this.contactMesh)
         })
 
-        this.textureLoader.load('/images/menu_scanr_poster.png', (image) => {
-            this.menuScanrPoster = image
+        // this.textureLoader.load('/images/menu_scanr_poster.png', (image) => {
+        //     this.menuScanrPoster = image
 
-            let menuScanrGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
-            let menuScanrMaterial = new THREE.MeshBasicMaterial({map: this.menuScanrPoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
-            this.menuScanrMesh = new THREE.Mesh(menuScanrGeometry, menuScanrMaterial)
-            this.menuScanrMesh.position.set(-3.05, 0, -5.6)
-            this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
-            this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
-            this.scene.add(this.menuScanrMesh)
+        //     let menuScanrGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
+        //     let menuScanrMaterial = new THREE.MeshBasicMaterial({map: this.menuScanrPoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
+        //     this.menuScanrMesh = new THREE.Mesh(menuScanrGeometry, menuScanrMaterial)
+        //     this.menuScanrMesh.position.set(-3.05, 0, -5.6)
+        //     this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
+        //     this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
+        //     this.scene.add(this.menuScanrMesh)
+        // })
+
+        this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
+            this.mindArchivePoster = image
+
+            let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
+            let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
+            this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
+            this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
+            this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
+            this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
+            this.scene.add(this.mindArchiveMesh)
         })
 
         this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
@@ -135,7 +140,7 @@ export default class RoomScene {
                     let tempMaterial = new THREE.MeshBasicMaterial({map: child.material.map, color: 0xFFFFFF})
                     child.material = tempMaterial
                 } else {
-                    child.material = new THREE.MeshBasicMaterial({color: 0x000000, transparent: true, opacity: 0.9})
+                    child.material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.9, color: 0x000000})
                 }
             }
 
@@ -161,17 +166,17 @@ export default class RoomScene {
     }
 
     createScene = () => {
-        this.scene.background = new THREE.Color( 0xffffff )
+        this.scene.background = new THREE.Color( 0xFFFFFF )
         this.renderer.setSize(window.innerWidth, window.innerHeight)
         this.renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
         // Simulate sunlight
-        var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 2)
+        var hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF, 2)
         hemiLight.position.set(0, 200, 0)
         this.scene.add(hemiLight)
 
         // Add block below user so that scene won't look weird when looking down on mobile
         let block = new THREE.CubeGeometry(1.3, 0.1, 1);
-        let blockMaterial = new THREE.MeshBasicMaterial({color: 0x0})
+        let blockMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
         let blockMesh = new THREE.Mesh(block, blockMaterial)
         blockMesh.position.set(0, -1.9, -1.75)
         this.scene.add(blockMesh)
@@ -243,7 +248,7 @@ export default class RoomScene {
 
         var ray = new THREE.Raycaster()
         ray.setFromCamera(vector, this.camera)
-        var intersects = ray.intersectObjects([this.menuScanrMesh, this.devBadge], true)
+        var intersects = ray.intersectObjects([this.mindArchiveMesh, this.devBadge, this.contactMesh], true)
 
         if(intersects.length > 0) {
             this.intersectedObject = intersects[0].object
@@ -306,8 +311,8 @@ export default class RoomScene {
     }
 
     handleClick = () => {
-        if(this.intersectedObject && this.intersectedObject.uuid === this.menuScanrMesh.uuid) {
-            this.landingPage.renderAppInformation('menuScanr')
+        if(this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
+            this.landingPage.renderAppInformation('mindArchive')
             let rotation = this.scannerLockMesh.rotation.z
             this.removeScannerLock()
             this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation)
@@ -316,15 +321,14 @@ export default class RoomScene {
         } else if (this.intersectedObject && this.intersectedObject.uuid === this.devBadge.uuid) {
             window.open('https://dev.to/wandererstudio')
             this.intersectedObject = null
-        } 
-        // else if (this.intersectedObject && this.intersectedObject.uuid === this.contactMesh.uuid) {
-        //     document.querySelector('#email-input').select()
-        //     document.execCommand('copy')
-        //     let rotation = this.scannerLockMesh.rotation.z
-        //     this.removeScannerLock()
-        //     this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation)
-        //     this.addScannerText('Email copied', 1.8, false, 0x28a745)
-        // }
+        } else if (this.intersectedObject && this.intersectedObject.uuid === this.contactMesh.uuid) {
+            window.location.href = 'mailto:info@wanderer.studio'
+            
+            let rotation = this.scannerLockMesh.rotation.z
+            this.removeScannerLock()
+            this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation)
+            this.addScannerText('Emailing', 1.8, false, 0x28a745)
+        }
     }
 
     addScannerLock = (parent, arc, color, rotationZ) => {
