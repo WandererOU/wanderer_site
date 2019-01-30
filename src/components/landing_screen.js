@@ -35,7 +35,7 @@ export default class LandingPage {
             ]),
             el('.line'),
             el('.subtitle', [
-                el('h2', 'Augmented Reality is about to change how we'),
+                el('h2', 'Mixed Reality is about to change how we'),
                 el('h2', 'interact with the world around us.'),
                 el('h2', 'Wånderer Studio would like to invite you to '),
                 el('h2', '',
