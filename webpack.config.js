@@ -25,7 +25,8 @@ module.exports = {
     ]),
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
-      template: 'index.html'
+      template: 'index.html',
+      google_code: process.env.google_code
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
