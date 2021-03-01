@@ -39,7 +39,7 @@
   "dependencies": {
     "gsap": "^2.1.3",
     "redom": "^3.23.1",
-    "three": "^0.95.0",
+    "three": "^0.125.0",
     "three-device-orientation": "^1.0.3",
     "three-gltf-loader": "^1.105.0"
   }
