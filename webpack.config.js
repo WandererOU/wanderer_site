@@ -1,5 +1,5 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -12,16 +12,17 @@ const options = {
     new CopyWebpackPlugin({
       patterns: [
         { from: './src/assets/images', to: 'images' },
-        { from: './src/assets/fonts/Poppins_SemiBold.json', to: 'fonts'},
+        { from: './src/assets/fonts/Poppins_SemiBold.json', to: 'fonts' },
         { from: './src/assets/scenes', to: 'scenes' },
-        { from: './src/assets/meta', to: 'meta'}
-    ]}),
+        { from: './src/assets/meta', to: 'meta' },
+      ],
+    }),
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
       template: 'index.html',
-      google_code: process.env.google_code
+      google_code: process.env.google_code,
     }),
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
   ],
   mode: process.env.NODE_ENV,
   cache: true,
@@ -33,7 +34,7 @@ const options = {
   },
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
   },
   module: {
     rules: [
@@ -43,48 +44,39 @@ const options = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              ['@babel/preset-env', { targets: "defaults" }]
-            ],
-
-          }
-        }
+            presets: [['@babel/preset-env', { targets: 'defaults' }]],
+          },
+        },
       },
       {
         test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
+        use: ['file-loader'],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          'file-loader'
-        ]
-      }
-    ]
-  }
+        use: ['file-loader'],
+      },
+    ],
+  },
 };
 
 if (process.env.NODE_ENV === 'development') {
   options.devtool = 'source-map';
 } else {
-  options.plugins.push(new UglifyJsPlugin({
-    uglifyOptions: {
-      beautify: false,
-      ecma: 6,
-      compress: true,
-      warnings: false
-    }
-  }))
+  options.plugins.push(
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        beautify: false,
+        ecma: 6,
+        compress: true,
+        warnings: false,
+      },
+    }),
+  );
 }
 
 module.exports = options;
