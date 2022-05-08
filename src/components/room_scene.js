@@ -1,19 +1,23 @@
-import * as THREE from 'three'
+import * as THREE from 'three';
 import DeviceOrientationControls from 'three-device-orientation'
-import GLTFLoader from 'three-gltf-loader'
+// import GLTFLoader from 'three-gltf-loader'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import {TweenLite, Power1} from 'gsap'
 import LoadingScreen from './loading_screen'
 import LandingPage from './landing_screen'
 import * as constants from '../utils/constants'
-import {mount, unmount} from 'redom'
+import {mount} from 'redom'
 
 export default class RoomScene {
-    constructor() {
+    constructor({ isMobile }) {
         this.activeMenu = constants.INITIAL
+        this.isMobile = isMobile;
 
         // HTML pages
-        this.loadingScreen = new LoadingScreen()
-        this.landingPage = new LandingPage()
+        this.loadingScreen = new LoadingScreen({ isMobile })
+        this.landingPage = new LandingPage({ isMobile })
         mount(document.body, this.loadingScreen)
         mount(document.body, this.landingPage)
         // Scene components
@@ -24,16 +28,16 @@ export default class RoomScene {
 
         // Loaders
         this.manager = new THREE.LoadingManager()
-        this.fontLoader = new THREE.FontLoader(this.manager)
+        this.fontLoader = new FontLoader()
         this.gltfLoader = new GLTFLoader(this.manager)
         this.textureLoader = new THREE.TextureLoader(this.manager)
-        
+
         // Camera setup
         this.isMovingCamera = true
         this.rig =  new THREE.Object3D();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 400);
 
-        if (window.isMobile) {
+        if (this.isMobile) {
             this.controls = new DeviceOrientationControls(this.camera)
         }
         this.rig.position.set(0, 0, -1.5)
@@ -46,27 +50,27 @@ export default class RoomScene {
             this.standardFont = font
 
             // Add "Welcome" message
-            var textMaterial = new THREE.MeshBasicMaterial({color: 0x000000}) 
-            var welcomeGeometry = new THREE.TextBufferGeometry(constants.welcome, { 
+            const textMaterial = new THREE.MeshBasicMaterial({color: 0x000000}) 
+            const welcomeGeometry = new TextGeometry(constants.welcome, { 
                 font: this.standardFont, 
                 size: 0.34, 
                 curveSegments: 20, 
                 height: 0.01 
             }) 
-            var welcomeMesh = new THREE.Mesh(welcomeGeometry, textMaterial) 
+            const welcomeMesh = new THREE.Mesh(welcomeGeometry, textMaterial) 
             welcomeMesh.position.set(1.5, 0, 1.0) 
             welcomeMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI) 
             this.scene.add(welcomeMesh)
 
             // Adds "Look up" message below start point
-            var lookUpMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF}) 
-            var lookUpGeometry = new THREE.TextBufferGeometry("Look up", { 
+            const lookUpMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF}) 
+            const lookUpGeometry = new TextGeometry("Look up", { 
                 font: this.standardFont, 
                 size: 0.06, 
                 curveSegments: 20, 
                 height: 0.001
             }) 
-            var lookUpMesh = new THREE.Mesh(lookUpGeometry, lookUpMaterial) 
+            const lookUpMesh = new THREE.Mesh(lookUpGeometry, lookUpMaterial) 
             lookUpMesh.position.set(-0.135, -0.9, -1.95) 
             lookUpMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -Math.PI / 2) 
             this.scene.add(lookUpMesh)
@@ -75,8 +79,8 @@ export default class RoomScene {
         this.textureLoader.load('/images/dev-badge.png', (image) => {
             this.devBadgeImage = image
 
-            let blogGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
-            let blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.7, color: 0xFF0000})
+            const blogGeometry = new THREE.PlaneBufferGeometry(1.5, 1.5)
+            const blogMaterial = new THREE.MeshBasicMaterial({map: this.devBadgeImage, transparent: true, opacity: 0.7, color: 0xFF0000})
             this.devBadge = new THREE.Mesh(blogGeometry, blogMaterial)
             this.devBadge.position.set(-3.0, 0, -16.38)
             this.devBadge.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
@@ -87,8 +91,8 @@ export default class RoomScene {
         this.textureLoader.load('/images/about_text.png', (image) => {
             this.aboutImage = image
 
-            let aboutGeometry = new THREE.PlaneBufferGeometry(2.0, 2.0)
-            let aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0xFFFFFF})
+            const aboutGeometry = new THREE.PlaneBufferGeometry(2.0, 2.0)
+            const aboutMaterial = new THREE.MeshBasicMaterial({map: this.aboutImage, transparent: true, opacity: 1.0, color: 0xFFFFFF})
             this.aboutMesh = new THREE.Mesh(aboutGeometry, aboutMaterial)
             this.aboutMesh.position.set(2.73, -0.3, -3.35)
             this.aboutMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
@@ -98,8 +102,8 @@ export default class RoomScene {
         this.textureLoader.load('/images/email-graffiti.png', (image) => {
             this.contactsImage = image
 
-            let contactGeometry = new THREE.PlaneBufferGeometry(1.6, 0.34)
-            let contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
+            const contactGeometry = new THREE.PlaneBufferGeometry(1.6, 0.34)
+            const contactMaterial = new THREE.MeshBasicMaterial({map: this.contactsImage, transparent: true, opacity: 1.0, color: 0xf})
             this.contactMesh = new THREE.Mesh(contactGeometry, contactMaterial)
             this.contactMesh.position.set(2.73, 0.37, -12.05)
             this.contactMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -Math.PI / 2)
@@ -122,8 +126,8 @@ export default class RoomScene {
         this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
             this.mindArchivePoster = image
 
-            let mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
-            let mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
+            const mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
+            const mindArchiveMaterial = new THREE.MeshBasicMaterial({map: this.mindArchivePoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
             this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial)
             this.mindArchiveMesh.position.set(-3.05, 0, -5.6)
             this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
@@ -132,16 +136,16 @@ export default class RoomScene {
         })
 
         this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
-            let tunnel = object.scene
+            const tunnel = object.scene
             
             for (let i = 0; i < tunnel.children.length; i++) {
-                let child = tunnel.children[i]
-                if (constants.shouldRenderMaterial.indexOf(i) > -1) {
-                    let tempMaterial = new THREE.MeshBasicMaterial({map: child.material.map, color: 0xFFFFFF})
-                    child.material = tempMaterial
-                } else {
-                    child.material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.9, color: 0x000000})
-                }
+                const child = tunnel.children[i]
+                const tempMaterial = new THREE.MeshBasicMaterial({map: child.material.map, color: 0xFFFFFF})
+                child.material = tempMaterial
+            //     if (constants.shouldRenderMaterial.indexOf(i) > -1) {
+            //     } else {
+            //         child.material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.9, color: 0x000000})
+            //     }
             }
 
             tunnel.position.set(-0.4, -1.7, -11)
@@ -175,9 +179,9 @@ export default class RoomScene {
         this.scene.add(hemiLight)
 
         // Add block below user so that scene won't look weird when looking down on mobile
-        let block = new THREE.CubeGeometry(1.3, 0.1, 1);
-        let blockMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
-        let blockMesh = new THREE.Mesh(block, blockMaterial)
+        const block = new THREE.BoxGeometry(1.3, 0.1, 1);
+        const blockMaterial = new THREE.MeshBasicMaterial({color: 0x000000})
+        const blockMesh = new THREE.Mesh(block, blockMaterial)
         blockMesh.position.set(0, -1.9, -1.75)
         this.scene.add(blockMesh)
     }
@@ -295,7 +299,7 @@ export default class RoomScene {
 
         this.isMovingCamera = true
         this.activeMenu = menu
-        let coordinates = window.isMobile ? constants.menuCoordinatesMobile[menu] : constants.menuCoordinates[menu]
+        let coordinates = this.isMobile ? constants.menuCoordinatesMobile[menu] : constants.menuCoordinates[menu]
         let position = coordinates.position
         let rotation = coordinates.rotation
     
@@ -374,7 +378,7 @@ export default class RoomScene {
             this.scannerTextMesh = null
         }
 
-        var scannerTextGeometry = new THREE.TextBufferGeometry(text, {
+        var scannerTextGeometry = new TextGeometry(text, {
             font: this.standardFont,
             size: 0.07 * scale,
             curveSegments: 20,

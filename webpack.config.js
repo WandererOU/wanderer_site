@@ -5,24 +5,17 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
-module.exports = {
+const options = {
   entry: './src/index.js',
   plugins: [
     // new CleanWebpackPlugin(['dist']),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        beautify: false,
-        ecma: 6,
-        compress: true,
-        warnings: false
-      }
-    }),
-    new CopyWebpackPlugin([
+    new CopyWebpackPlugin({
+      patterns: [
         { from: './src/assets/images', to: 'images' },
         { from: './src/assets/fonts/Poppins_SemiBold.json', to: 'fonts'},
         { from: './src/assets/scenes', to: 'scenes' },
         { from: './src/assets/meta', to: 'meta'}
-    ]),
+    ]}),
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
       template: 'index.html',
@@ -30,12 +23,13 @@ module.exports = {
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
-  mode: 'production',
+  mode: process.env.NODE_ENV,
   cache: true,
-  devtool: 'cheap-module-inline-source-map',
   devServer: {
-    contentBase: './dist',
-    hot: true
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    compress: true,
   },
   output: {
     filename: 'main.js',
@@ -49,8 +43,10 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['es2015'],
-            plugins: ['transform-class-properties']
+            presets: [
+              ['@babel/preset-env', { targets: "defaults" }]
+            ],
+
           }
         }
       },
@@ -77,3 +73,18 @@ module.exports = {
     ]
   }
 };
+
+if (process.env.NODE_ENV === 'development') {
+  options.devtool = 'source-map';
+} else {
+  options.plugins.push(new UglifyJsPlugin({
+    uglifyOptions: {
+      beautify: false,
+      ecma: 6,
+      compress: true,
+      warnings: false
+    }
+  }))
+}
+
+module.exports = options;

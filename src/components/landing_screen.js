@@ -3,9 +3,10 @@ import {TimelineMax, Power3, Expo, TweenLite} from 'gsap'
 import {el, setChildren} from 'redom'
 
 export default class LandingPage {
-    constructor() {
+    constructor({ isMobile }) {
         // variables
         this.activeMenu = constants.INITIAL
+        this.isMobile = isMobile;
         this.menuTransform = {
             x: 0,
             y: 0,
@@ -120,7 +121,7 @@ export default class LandingPage {
     selectActiveMenu = (menu) => {
         this.activeMenu = menu
         // Only trigger on small screens and when menu isn't initial
-        if(window.isMobile || window.innerWidth < 1150) {
+        if(this.isMobile || window.innerWidth < 1150) {
             this.closeNavigation()
         }
     }

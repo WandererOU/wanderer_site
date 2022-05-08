@@ -1,18 +1,24 @@
 @import 'loading_screen';
 @import 'landing_screen';
 
-@font-face {
-    font-family: 'Montserrat-Black';
-    font-display: auto;
-    src: url(../assets/fonts/Montserrat-Black.ttf);
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Poppins:wght@200;600&display=swap');
+
+html {
+    font-family: 'Poppins', sans-serif;
 }
-@font-face {
-    font-family: 'Poppins-ExtraLight';
-    font-display: auto;
-    src: url(../assets/fonts/Poppins-ExtraLight.ttf);
-}
-@font-face {
-    font-family: 'Poppins-SemiBold';
-    font-display: auto;
-    src: url(../assets/fonts/Poppins-SemiBold.ttf);
-}
+
+// @font-face {
+//     font-family: 'Montserrat-Black';
+//     font-display: auto;
+//     src: url(../assets/fonts/Montserrat-Black.ttf);
+// }
+// @font-face {
+//     font-family: 'Poppins-ExtraLight';
+//     font-display: auto;
+//     src: url(../assets/fonts/Poppins-ExtraLight.ttf);
+// }
+// @font-face {
+//     font-family: 'Poppins-SemiBold';
+//     font-display: auto;
+//     src: url(../assets/fonts/Poppins-SemiBold.ttf);
+// }

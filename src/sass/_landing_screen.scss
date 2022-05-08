@@ -143,7 +143,8 @@ $mq-large: "(min-width: #{$bp-large})";
             
             h1 {
                 position: relative;
-                font-family: 'Montserrat-Black', sans-serif;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 900;
                 font-size: 5.5em;
                 color: $lightViolet;
                 text-align: left;
@@ -170,7 +171,7 @@ $mq-large: "(min-width: #{$bp-large})";
         
             h2 {
                 position: relative;
-                font-family: 'Poppins-ExtraLight', sans-serif;
+                font-weight: 200;
                 font-size: 2.3em;
                 color: $white;
                 text-align: left;
@@ -181,7 +182,7 @@ $mq-large: "(min-width: #{$bp-large})";
                 }
 
                 strong {
-                    font-family: 'Poppins-SemiBold', sans-serif;
+                    font-weight: 600;
                     border-bottom: 4px solid #735da8;
                 }
             }
@@ -212,7 +213,7 @@ $mq-large: "(min-width: #{$bp-large})";
         p {
             font-size: 2.5rem;
             line-height: 3.5rem;
-            font-family: 'Poppins-ExtraLight', sans-serif;
+            font-weight: 200;
             color: $white;
             cursor: pointer;
             padding: 15px;
@@ -227,12 +228,12 @@ $mq-large: "(min-width: #{$bp-large})";
             // }
             
             &.selected {
-                font-family: 'Poppins-SemiBold', sans-serif !important;
+                font-weight: 600;
             }
     
             &:hover {
                 font-size: 3rem;
-                font-family: 'Poppins-SemiBold', sans-serif;
+                font-weight: 600;
             }
         }
     }
@@ -276,7 +277,7 @@ $mq-large: "(min-width: #{$bp-large})";
                 margin-top: 30px;
                 color: $white;
                 font-size: 1.6rem;
-                font-family: 'Poppins-ExtraLight', sans-serif;
+                font-weight: 200;
 
                 @media #{$mq-small} {
                     font-size: 4.2vw;
@@ -290,7 +291,7 @@ $mq-large: "(min-width: #{$bp-large})";
                 div {
                     color: $white;
                     padding: 15px;
-                    font-family: 'Poppins-SemiBold', sans-serif;
+                    font-weight: 600;
                     font-size: 1.6rem;
                     background-color: $darkGray;
                     width: fit-content;
@@ -314,7 +315,7 @@ $mq-large: "(min-width: #{$bp-large})";
         
             /* X button styling */
             cursor: pointer;
-            font-family: 'Poppins-ExtraLight', sans-serif;
+            font-weight: 600;
             text-align: center;
             line-height: 50px;
             font-size: 30px;

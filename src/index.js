@@ -6,25 +6,24 @@ import './sass/style.scss'
 class Root {
     constructor() {
         const testExp = new RegExp('Android|webOS|iPhone|iPad|' +
-    		       'BlackBerry|Windows Phone|'  +
-    		       'Opera Mini|IEMobile|Mobile' , 
-                  'i')
-        if (testExp.test(navigator.userAgent)) {
-            window.isMobile = true
-        }
-        this.roomSceneObj = new RoomScene()
-        this.el = el('#main-div')
+                'BlackBerry|Windows Phone|'  +
+                'Opera Mini|IEMobile|Mobile' , 
+                'i');
+        this.isMobile = testExp.test(navigator.userAgent);
+        this.roomSceneObj = new RoomScene({ isMobile: this.isMobile });
+        this.el = el('#main-div');
     }
- 
+
     onmount() {
-        mount(this.el, this.roomSceneObj)
-        this.registerEventListeners()
+        console.log(this.roomSceneObj);
+        mount(this.el, this.roomSceneObj);
+        this.registerEventListeners();
     }
 
     registerEventListeners = () => {
-        if (window.isMobile) {
+        if (this.isMobile) {
             document.addEventListener('touchend', (event) => {
-                this.handleClickAndTap(event)
+                this.handleClickAndTap(event);
             })
         } else {
             window.addEventListener('wheel', () => {
