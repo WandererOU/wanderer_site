@@ -41,7 +41,7 @@
     "webpack-dev-server": "^4.9.0"
   },
   "dependencies": {
-    "gsap": "^3.10.4",
+    "gsap": "^3.6.0",
     "redom": "^3.27.3",
     "three": "^0.140.0",
     "three-device-orientation": "^1.0.3",
