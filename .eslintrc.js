@@ -10,5 +10,6 @@ module.exports = {
   },
   rules: {
     'max-len': 1,
+    'no-plusplus': 0,
   },
 };

@@ -1,4 +1,5 @@
-import { TimelineMax, Power3, Expo, TweenLite } from 'gsap';
+import gsap, { Power3, Expo } from 'gsap';
+
 import { el, setChildren } from 'redom';
 import * as constants from '../utils/constants';
 
@@ -73,13 +74,10 @@ export default class LandingPage {
   }
 
   clearElements = () => {
-    if (this.menuContainer) {
-      this.menuContainer.children.forEach((child) => {
-        child.classList.remove('selected', 'initial');
-      });
-      // for (let i = 0; i < this.menuContainer.children.length; i++) {
-      //   this.menuContainer.children[i].classList.remove('selected', 'initial');
-      // }
+    if (this.menuContainer && this.menuContainer.children) {
+      for (let i = 0; i < this.menuContainer.children.length; i++) {
+        this.menuContainer.children[i].classList.remove('selected', 'initial');
+      }
     }
 
     setChildren(this.midContainer, []);
@@ -126,25 +124,23 @@ export default class LandingPage {
 
   closeNavigation = () => {
     this.hamburgerMenu.children[0].attributes.type.ownerElement.checked = false;
-    TweenLite.to(this.menuContainer.style, 0.5, { height: '0px', ease: Power3.easeOut });
+    gsap.to(`#${this.menuContainer.id}`, { duration: 0.5, height: '0px', ease: Power3.easeOut });
   };
 
   toggleNavigation = () => {
     if (this.menuContainer.clientHeight === 0) {
       this.hamburgerMenu.children[0].attributes.type.ownerElement.checked = true;
-      TweenLite.to(this.menuContainer.style, 0.5, { height: '100%', ease: Power3.easeOut });
+      gsap.to(`#${this.menuContainer.id}`, { duration: 0.5, height: '100%', ease: Power3.easeOut });
     } else {
       this.hamburgerMenu.children[0].attributes.type.ownerElement.checked = false;
-      TweenLite.to(this.menuContainer.style, 0.5, { height: '0px', ease: Power3.easeOut });
+      gsap.to(`#${this.menuContainer.id}`, { duration: 0.5, height: '0px', ease: Power3.easeOut });
     }
   };
 
   animateTitle = () => {
-    const tl = new TimelineMax();
-    tl.delay(0.3);
-    tl.to('div.line', 0.8, { width: '100%', ease: Power3.easeOut });
-    tl.fromTo('h1', 0.8, { top: '6em' }, { top: 0, ease: Expo.easeOut }, 'reveal');
-    tl.fromTo('h2', 0.8, { top: '-12em' }, { top: 0, ease: Expo.easeOut }, 'reveal');
+    gsap.to('div.line', { duration: 0.8, stagger: 0.3, width: '100%', ease: Power3.easeOut });
+    gsap.fromTo('h1', { duration: 0.8, stagger: 0.3, top: '6em' }, { top: 0, ease: Expo.easeOut }, 'reveal');
+    gsap.fromTo('h2', { duration: 0.8, stagger: 0.3, top: '-12em' }, { top: 0, ease: Expo.easeOut }, 'reveal');
   };
 
   renderAppInformation = (app) => {

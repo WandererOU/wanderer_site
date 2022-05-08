@@ -4,7 +4,7 @@ import DeviceOrientationControls from 'three-device-orientation';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { TweenLite, Power1 } from 'gsap';
+import gsap, { Power1 } from 'gsap';
 import { mount } from 'redom';
 import LoadingScreen from './loading_screen';
 import LandingPage from './landing_screen';
@@ -127,18 +127,6 @@ export default class RoomScene {
       this.scene.add(this.contactMesh);
     });
 
-    // this.textureLoader.load('/images/menu_scanr_poster.png', (image) => {
-    //     this.menuScanrPoster = image
-
-    //     let menuScanrGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8)
-    //     let menuScanrMaterial = new THREE.MeshBasicMaterial({map: this.menuScanrPoster, transparent: true, opacity: 0.7, color: 0xFFFFFF})
-    //     this.menuScanrMesh = new THREE.Mesh(menuScanrGeometry, menuScanrMaterial)
-    //     this.menuScanrMesh.position.set(-3.05, 0, -5.6)
-    //     this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2)
-    //     this.menuScanrMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1)
-    //     this.scene.add(this.menuScanrMesh)
-    // })
-
     this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
       this.mindArchivePoster = image;
 
@@ -158,16 +146,13 @@ export default class RoomScene {
 
     this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
       const tunnel = object.scene;
-
-      for (let i = 0; i < tunnel.children.length; i++) {
-        const child = tunnel.children[i];
-        const tempMaterial = new THREE.MeshBasicMaterial({ map: child.material.map, color: 0xffffff });
+      tunnel.children.forEach((child) => {
+        const tempMaterial = new THREE.MeshBasicMaterial({
+          map: child.material.map,
+          color: 0xffffff,
+        });
         child.material = tempMaterial;
-        //     if (constants.shouldRenderMaterial.indexOf(i) > -1) {
-        //     } else {
-        //         child.material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.9, color: 0x000000})
-        //     }
-      }
+      });
 
       tunnel.position.set(-0.4, -1.7, -11);
       tunnel.rotateX(-Math.PI / 2);
@@ -261,7 +246,8 @@ export default class RoomScene {
     // mouse rotation
     const deltaY = -window.innerHeight / 2 + y;
     const deltax = -window.innerWidth / 2 + x;
-    const rotAnimation = TweenLite.to(this.camera.rotation, 0.5, {
+    const rotAnimation = gsap.to(this.camera.rotation, {
+      duration: 0.5,
       x: -deltaY * sensitivity,
       y: -deltax * sensitivity,
       z: 0,
@@ -293,7 +279,7 @@ export default class RoomScene {
     }
   };
 
-  handleMoveCamera = (event) => {
+  handleMoveCamera = () => {
     const isScrollUp = event.deltaY > 0;
     switch (this.activeMenu) {
       case constants.INITIAL:
@@ -330,9 +316,9 @@ export default class RoomScene {
     const { position } = coordinates;
     const { rotation } = coordinates;
 
-    const posAnimation = TweenLite.to(this.rig.position, 1.4, { x: position.x, y: position.y, z: position.z });
-    const rigAnimation = TweenLite.to(this.rig.rotation, 1.4, { x: rotation.x, y: rotation.y, z: rotation.z });
-    const cameraAnimation = TweenLite.to(this.camera.rotation, 1.4, { x: 0, y: 0, z: 0 });
+    const posAnimation = gsap.to(this.rig.position, { duration: 1.4, x: position.x, y: position.y, z: position.z });
+    const rigAnimation = gsap.to(this.rig.rotation, { duration: 1.4, x: rotation.x, y: rotation.y, z: rotation.z });
+    const cameraAnimation = gsap.to(this.camera.rotation, { duration: 1.4, x: 0, y: 0, z: 0 });
 
     posAnimation.eventCallback('onComplete', () => {
       this.intersectedObject = null;

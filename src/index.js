@@ -24,8 +24,8 @@ class Root {
     } else {
       window.addEventListener(
         'wheel',
-        (e) => {
-          this.roomSceneObj.handleMoveCamera(e);
+        () => {
+          this.roomSceneObj.handleMoveCamera();
         },
         { passive: true },
       );
