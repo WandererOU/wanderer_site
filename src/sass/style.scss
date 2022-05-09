@@ -7,6 +7,15 @@ html {
     font-family: 'Poppins', sans-serif;
 }
 
+#mobile-debug {
+  position: absolute;
+  bottom: 20px;
+  color: #fff;
+  font-size: 18px;
+  text-align: left;
+  width: 100%;
+  z-index: 1000;
+}
 // @font-face {
 //     font-family: 'Montserrat-Black';
 //     font-display: auto;

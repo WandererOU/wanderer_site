@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import DeviceOrientationControls from 'three-device-orientation';
+// import DeviceOrientationControls from 'three-device-orientation';
 // import GLTFLoader from 'three-gltf-loader'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -20,6 +20,7 @@ export default class RoomScene {
     this.landingPage = new LandingPage({ isMobile });
     mount(document.body, this.loadingScreen);
     mount(document.body, this.landingPage);
+
     // Scene components
     this.scene = new THREE.Scene();
     this.renderer = new THREE.WebGLRenderer();
@@ -37,12 +38,13 @@ export default class RoomScene {
     this.rig = new THREE.Object3D();
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 400);
 
-    if (this.isMobile) {
-      this.controls = new DeviceOrientationControls(this.camera);
-    }
     this.rig.position.set(0, 0, -1.5);
     this.rig.add(this.camera);
     this.scene.add(this.rig);
+
+    // Mobile gyroscope calculations
+    this.prevX = this.camera.rotation.x;
+    this.prevY = this.camera.rotation.y;
 
     // Set up scene
     this.createScene();
@@ -222,10 +224,9 @@ export default class RoomScene {
       this.scannerLockMesh.rotation.z -= 0.01;
     }
 
-    if (this.controls) {
+    if (this.isMobile) {
       // hover effect on objects
       this.detectObjects(window.innerWidth / 2, window.innerHeight / 2);
-      this.controls.update();
     }
 
     this.renderScene();
@@ -245,16 +246,35 @@ export default class RoomScene {
 
     // mouse rotation
     const deltaY = -window.innerHeight / 2 + y;
-    const deltax = -window.innerWidth / 2 + x;
-    const rotAnimation = gsap.to(this.camera.rotation, {
+    const deltaX = -window.innerWidth / 2 + x;
+    gsap.to(this.camera.rotation, {
       duration: 0.5,
       x: -deltaY * sensitivity,
-      y: -deltax * sensitivity,
+      y: -deltaX * sensitivity,
       z: 0,
       ease: Power1.easeOut,
     });
     this.renderer.render(this.scene, this.camera);
     this.detectObjects(x, y);
+  };
+
+  handleGyroscope = (x, y) => {
+    if (this.isMovingCamera) return;
+    const sensitivity = 0.09;
+    const rad = Math.PI / 180;
+
+    // Get differenece in radians
+    const deltaX = this.prevX - x;
+    const rotationX = (this.prevX + deltaX + 90) * rad;
+
+    const deltaY = this.prevY - y;
+    const rotationY = (this.prevY + deltaY) * rad;
+
+    this.camera.rotation.set(-rotationX * sensitivity, -rotationY * sensitivity, 0);
+
+    this.prevX = rotationX;
+    this.prevY = rotationY;
+    this.renderer.render(this.scene, this.camera);
   };
 
   detectObjects = (x, y) => {

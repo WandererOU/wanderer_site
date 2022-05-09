@@ -30,6 +30,7 @@ const options = {
     static: {
       directory: path.join(__dirname, 'dist'),
     },
+    https: true,
     compress: true,
   },
   output: {

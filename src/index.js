@@ -7,19 +7,40 @@ class Root {
   constructor() {
     const testExp = /Android|webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i;
     this.isMobile = testExp.test(navigator.userAgent);
-    this.roomSceneObj = new RoomScene({ isMobile: this.isMobile });
+    this.roomSceneObj = new RoomScene({
+      isMobile: this.isMobile,
+    });
     this.el = el('#main-div');
+    this.mobileEl = el('p#mobile-debug');
   }
 
   onmount() {
     mount(this.el, this.roomSceneObj);
+    mount(this.el, this.mobileEl);
+
     this.registerEventListeners();
   }
 
+  renderOrientationData = (x, y) => {
+    this.mobileEl.innerHTML = `x: ${x};<br> y: ${y};`;
+  };
+
   registerEventListeners = () => {
     if (this.isMobile) {
-      document.addEventListener('touchend', (event) => {
+      window.addEventListener('touchend', (event) => {
         this.handleClickAndTap(event);
+        DeviceOrientationEvent.requestPermission().then((response) => {
+          if (response === 'granted') {
+            window.addEventListener('deviceorientation', (e) => {
+              const x = Math.round(e.beta);
+              const y = Math.round(e.gamma);
+              if (x < 85) {
+                // this.renderOrientationData(x, y);
+                this.roomSceneObj.handleGyroscope(x, y);
+              }
+            });
+          }
+        });
       });
     } else {
       window.addEventListener(
