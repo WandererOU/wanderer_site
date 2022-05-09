@@ -2,7 +2,6 @@ const path = require('path');
 // const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 
 const options = {
@@ -67,17 +66,6 @@ const options = {
 
 if (process.env.NODE_ENV === 'development') {
   options.devtool = 'source-map';
-} else {
-  options.plugins.push(
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        beautify: false,
-        ecma: 6,
-        compress: true,
-        warnings: false,
-      },
-    }),
-  );
 }
 
 module.exports = options;
