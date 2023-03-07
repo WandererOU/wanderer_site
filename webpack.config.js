@@ -19,7 +19,7 @@ const options = {
     new HtmlWebpackPlugin({
       title: 'Wånderer Studio',
       template: 'index.html',
-      google_code: process.env.google_code,
+      google_code: 'L1320qXwlvUTlMNVHCSi9iUvw19iFqxchABkivo63bU',
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],
