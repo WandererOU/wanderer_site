@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const options = {
   entry: './src/index.js',
   plugins: [
-    // new CleanWebpackPlugin(['dist']),
+    // new CleanWebpackPlugin(['docs']),
     new CopyWebpackPlugin({
       patterns: [
         { from: './src/assets/images', to: 'images' },
@@ -27,14 +27,14 @@ const options = {
   cache: true,
   devServer: {
     static: {
-      directory: path.join(__dirname, 'dist'),
+      directory: path.join(__dirname, 'docs'),
     },
     https: true,
     compress: true,
   },
   output: {
     filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'docs'),
   },
   module: {
     rules: [
