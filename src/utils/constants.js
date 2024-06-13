@@ -13,6 +13,13 @@ export const apps = {
     isReleased: false,
     link: '',
   },
+  gbcare: {
+    title: 'GoodBoi Care',
+    description:
+      'GoodBoi Care is a mobile application that helps owners of pets that need special care to keep a close track of their medication and food habits, and allows for other primary or temporary caregivers to be involved by having a shared task tracker for routine and unique events in the life of your pet.',
+    isReleased: false,
+    link: 'https://goodboicare.com',
+  },
   menuScanr: {
     title: 'Menu Scanr',
     description:

@@ -129,21 +129,38 @@ export default class RoomScene {
       this.scene.add(this.contactMesh);
     });
 
-    this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
-      this.mindArchivePoster = image;
+    // this.textureLoader.load('/images/mind_archive_poster.png', (image) => {
+    //   this.mindArchivePoster = image;
 
-      const mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8);
-      const mindArchiveMaterial = new THREE.MeshBasicMaterial({
-        map: this.mindArchivePoster,
+    //   const mindArchiveGeometry = new THREE.PlaneBufferGeometry(0.6, 0.8);
+    //   const mindArchiveMaterial = new THREE.MeshBasicMaterial({
+    //     map: this.mindArchivePoster,
+    //     transparent: true,
+    //     opacity: 0.7,
+    //     color: 0xffffff,
+    //   });
+    //   this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial);
+    //   this.mindArchiveMesh.position.set(-3.05, 0, -5.6);
+    //   this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+    //   this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1);
+    //   this.scene.add(this.mindArchiveMesh);
+    // });
+
+    this.textureLoader.load('/images/gbcare_poster.png', (image) => {
+      this.goodBoiCarePoster = image;
+
+      const geometry = new THREE.PlaneBufferGeometry(0.6, 0.8);
+      const material = new THREE.MeshBasicMaterial({
+        map: this.goodBoiCarePoster,
         transparent: true,
         opacity: 0.7,
         color: 0xffffff,
       });
-      this.mindArchiveMesh = new THREE.Mesh(mindArchiveGeometry, mindArchiveMaterial);
-      this.mindArchiveMesh.position.set(-3.05, 0, -5.6);
-      this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2);
-      this.mindArchiveMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1);
-      this.scene.add(this.mindArchiveMesh);
+      this.gbcareMesh = new THREE.Mesh(geometry, material);
+      this.gbcareMesh.position.set(-3.05, 0, -5.6);
+      this.gbcareMesh.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), Math.PI / 2);
+      this.gbcareMesh.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), -0.1);
+      this.scene.add(this.gbcareMesh);
     });
 
     this.gltfLoader.load('/scenes/room/CONVICT_TUNNEL.gltf', (object) => {
@@ -284,7 +301,7 @@ export default class RoomScene {
 
     const ray = new THREE.Raycaster();
     ray.setFromCamera(vector, this.camera);
-    const intersects = ray.intersectObjects([this.mindArchiveMesh, this.devBadge, this.contactMesh], true);
+    const intersects = ray.intersectObjects([this.gbcareMesh, this.devBadge, this.contactMesh], true);
 
     if (intersects.length > 0) {
       this.intersectedObject = intersects[0].object;
@@ -348,8 +365,16 @@ export default class RoomScene {
   };
 
   handleClick = () => {
-    if (this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
-      this.landingPage.renderAppInformation('mindArchive');
+    // if (this.intersectedObject && this.intersectedObject.uuid === this.mindArchiveMesh.uuid) {
+    //   this.landingPage.renderAppInformation('mindArchive');
+    //   const rotation = this.scannerLockMesh.rotation.z;
+    //   this.removeScannerLock();
+    //   this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation);
+    //   this.addScannerText('Viewing', 0.8, true, 0x28a745);
+    //   this.intersectedObject = null;
+    // }
+    if (this.intersectedObject && this.intersectedObject.uuid === this.gbcareMesh.uuid) {
+      this.landingPage.renderAppInformation('gbcare');
       const rotation = this.scannerLockMesh.rotation.z;
       this.removeScannerLock();
       this.addScannerLock(this.intersectedObject, 6.3, 0x28a745, rotation);
