@@ -11,8 +11,7 @@ const options = {
     new CopyWebpackPlugin({
       patterns: [
         { from: './src/assets/images', to: 'images' },
-        { from: './src/assets/fonts/Poppins_SemiBold.json', to: 'fonts' },
-        { from: './src/assets/scenes', to: 'scenes' },
+        { from: './src/assets/fonts', to: 'fonts' },
         { from: './src/assets/meta', to: 'meta' },
       ],
     }),
@@ -29,8 +28,8 @@ const options = {
     static: {
       directory: path.join(__dirname, 'docs'),
     },
-    https: true,
     compress: true,
+    port: 8080,
   },
   output: {
     filename: 'main.js',

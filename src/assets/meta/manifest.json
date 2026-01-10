@@ -1,8 +1,16 @@
 {
+  "short_name": "Wånderer",
   "name": "Wånderer Studio",
-  "theme_color": "#604D8D",
-  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/images/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
   "start_url": "/",
-  "display": "fullscreen",
-  "orientation": "portrait"
+  "display": "standalone",
+  "theme_color": "#e8c547",
+  "background_color": "#0d0d0d"
 }
+
