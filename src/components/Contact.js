@@ -112,7 +112,7 @@ export default class Contact {
       console.log('Form submitted:', Object.fromEntries(formData));
 
       // Show success message (could be enhanced)
-      alert("Thank you for your message! We'll get back to you soon.");
+      alert("Thank you for your message! We'll get back to you soon");
       this.form.reset();
     });
   }
